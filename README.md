@@ -40,7 +40,7 @@ To contribute we suggest following these steps:
 4. Create a new branch related to this issue. We suggest to use a name like `issue-10` — 10 is the issue's ID
 5. Make all the changes necessary and commit
 6. Push the new branch to your Github repository
-7. Go to James' Github project and click on **Compare & Pull Request**
+7. Go to **Marvin.IA** Github project and click on **Compare & Pull Request**
 
 **Important:**
 
