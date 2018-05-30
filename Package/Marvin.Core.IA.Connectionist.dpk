@@ -1,0 +1,63 @@
+package Marvin.Core.IA.Connectionist;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  Marvin.Core;
+
+contains
+  Marvin.Core.IA.Connectionist.ActivateFunction.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.ActivateFunction.Clss.pas',
+  Marvin.Core.IA.Connectionist.Activation in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Activation.pas',
+  Marvin.Core.IA.Connectionist.Cost.Default.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Cost.Default.Clss.pas',
+  Marvin.Core.IA.Connectionist.Cost.Factory.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Cost.Factory.Clss.pas',
+  Marvin.Core.IA.Connectionist.Cost in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Cost.pas',
+  Marvin.Core.IA.Connectionist.Exceptions.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Exceptions.Clss.pas',
+  Marvin.Core.IA.Connectionist.Layer.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Layer.Clss.pas',
+  Marvin.Core.IA.Connectionist.Layer in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Layer.pas',
+  Marvin.Core.IA.Connectionist.Layers.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Layers.Clss.pas',
+  Marvin.Core.IA.Connectionist.Layers in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Layers.pas',
+  Marvin.Core.IA.Connectionist.LayerType.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.LayerType.Clss.pas',
+  Marvin.Core.IA.Connectionist.MultiLayerPerceptron.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.MultiLayerPerceptron.Clss.pas',
+  Marvin.Core.IA.Connectionist.MultiLayerPerceptron in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.MultiLayerPerceptron.pas',
+  Marvin.Core.IA.Connectionist.Neuron.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Neuron.Clss.pas',
+  Marvin.Core.IA.Connectionist.Neuron in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Neuron.pas',
+  Marvin.Core.IA.Connectionist.Neurons.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Neurons.Clss.pas',
+  Marvin.Core.IA.Connectionist.Neurons in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Neurons.pas',
+  Marvin.Core.IA.Connectionist.Support.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Support.Clss.pas',
+  Marvin.Core.IA.Connectionist.Support in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Support.pas',
+  Marvin.Core.IA.Connectionist.Synapse.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Synapse.Clss.pas',
+  Marvin.Core.IA.Connectionist.Synapse in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Synapse.pas',
+  Marvin.Core.IA.Connectionist.Synapses.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Synapses.Clss.pas',
+  Marvin.Core.IA.Connectionist.Synapses in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Synapses.pas',
+  Marvin.Core.IA.Connectionist.ValueConvertion.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.ValueConvertion.Clss.pas',
+  Marvin.Core.IA.Connectionist.ValueConvertion in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.ValueConvertion.pas',
+  Marvin.Core.IA.Connectionist.MLPClassifier.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.MLPClassifier.Clss.pas',
+  Marvin.Core.IA.Connectionist.Classifier in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Classifier.pas';
+
+end.
