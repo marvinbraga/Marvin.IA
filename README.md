@@ -52,7 +52,7 @@ If you have questions or general suggestions, don't hesitate to submit a new [Gi
 
 ## Contributors
 
-  - [@marvinbraga](https://github.com/marvinbraga) as Marcus Vinicius Braga ([Vlog](https://www.youtube.com/c/marvinbraga/))
+  - [@marvinbraga](https://github.com/marvinbraga) as Marcus Vinicius Braga ([Vlog](https://www.youtube.com/c/marvinbraga/)) ([LinkedIn](https://www.linkedin.com/in/marcus-vinicius-braga-0669444/))
 
 ## License (MIT)
 
