@@ -48,7 +48,7 @@ To contribute we suggest following these steps:
 - Each PR needs to work only in one issue, respecting the [single responsibility principle](https://en.wikipedia.org/wiki/Single_responsibility_principle).
 - Make sure your branch builds without any warnings/issues.
 
-If you have questions or general suggestions, don't hesitate to submit a new [Github issue](https://github.com/mdbs99/james/issues/new).
+If you have questions or general suggestions, don't hesitate to submit a new [Github issue](https://github.com/marvinbraga/Marvin.IA/issues/new).
 
 ## Contributors
 
