@@ -9,6 +9,9 @@
         <Projects Include="Marvin.Core.IA.Connectionist.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\PoC\PoC.IA.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="Marvin_Core_IA_Connectionist:Make">
         <MSBuild Projects="Marvin.Core.IA.Connectionist.dproj" Targets="Make"/>
     </Target>
+    <Target Name="PoC_IA">
+        <MSBuild Projects="..\PoC\PoC.IA.dproj"/>
+    </Target>
+    <Target Name="PoC_IA:Clean">
+        <MSBuild Projects="..\PoC\PoC.IA.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="PoC_IA:Make">
+        <MSBuild Projects="..\PoC\PoC.IA.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Marvin_Core;Marvin_Core_IA_Connectionist"/>
+        <CallTarget Targets="Marvin_Core;Marvin_Core_IA_Connectionist;PoC_IA"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Marvin_Core:Clean;Marvin_Core_IA_Connectionist:Clean"/>
+        <CallTarget Targets="Marvin_Core:Clean;Marvin_Core_IA_Connectionist:Clean;PoC_IA:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Marvin_Core:Make;Marvin_Core_IA_Connectionist:Make"/>
+        <CallTarget Targets="Marvin_Core:Make;Marvin_Core_IA_Connectionist:Make;PoC_IA:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
