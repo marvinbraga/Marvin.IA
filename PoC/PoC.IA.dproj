@@ -107,6 +107,10 @@
             <Form>FormStart</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Marvin.PoC.IA.Iris.Clss.pas"/>
+        <DCCReference Include="Marvin.PoC.IA.Iris.pas"/>
+        <DCCReference Include="Marvin.PoC.IA.DataConverter.pas"/>
+        <DCCReference Include="Marvin.PoC.IA.DataConverter.Clss.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

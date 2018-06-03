@@ -6,8 +6,17 @@ uses
   { marvin }
   Marvin.Core.IA.Connectionist.Classifier,
   { embarcadero }
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.StdCtrls,
+  Vcl.ExtCtrls,
   Vcl.ComCtrls;
 
 type
@@ -32,13 +41,17 @@ implementation
 
 uses
   { marvin }
-  Marvin.Core.IA.Connectionist.MLPClassifier.Clss;
+  Marvin.Core.IA.Connectionist.MLPClassifier.Clss,
+  Marvin.PoC.IA.DataConverter,
+  Marvin.PoC.IA.DataConverter.Clss,
+  System.Generics.Collections;
 
 {$R *.dfm}
 
 procedure TFormStart.ButtonLoadFileClick(Sender: TObject);
 var
   LStream: TStringStream;
+  LIrisData: TList<TDoubleArray>;
 begin
   if DlgData.Execute then
   begin
@@ -47,6 +60,14 @@ begin
       { load pure data file }
       LStream.LoadFromFile(DlgData.FileName);
       MemoData.Lines.Text := LStream.DataString;
+      { recupera os dados convertidos }
+      TIrisDataConverter.New(LStream.DataString).Execute(LIrisData);
+      try
+        { faz o split dos dados para treino e teste }
+
+      finally
+        LIrisData.Free;
+      end;
     finally
       FreeAndNil(LStream);
     end;
@@ -54,3 +75,4 @@ begin
 end;
 
 end.
+
