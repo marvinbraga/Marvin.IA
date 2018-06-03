@@ -14,15 +14,15 @@ We want to write elegant, clean, and maintainable code using OOP.
 
 **Principles.** The code has some design principles:
 
-* Fully interface-based
-* Memory is released automatically
-* All public methods are implementations of interface methods
-* All public methods return an interface instance or primitive type
-* No usage of nil/NULL in arguments or returns
-* No algorithms in constructors
-* No getters and setters
-* No type casting or reflection
-* No procedures or functions, only Interfaces and Objects
+* Fully interface-based.
+* Memory is released automatically.
+* All public methods are implementations of interface methods.
+* All public methods return an interface instance or primitive type.
+* No usage of nil/NULL in arguments or returns.
+* No algorithms in constructors.
+* No getters and setters.
+* No type casting or reflection.
+* No procedures or functions, only Interfaces and Objects.
 
 ## Dependencies
 
@@ -34,13 +34,13 @@ We are using other packages:
 
 To contribute we suggest following these steps:
 
-1. Fork this project (Click on **Fork** button)
-2. Clone your forked project to your local machine
-3. Create a new issue describing about the problem or enhancement that you are going to make
-4. Create a new branch related to this issue. We suggest to use a name like `issue-10` — 10 is the issue's ID
-5. Make all the changes necessary and commit
-6. Push the new branch to your Github repository
-7. Go to **Marvin.IA** Github project and click on **Compare & Pull Request**
+1. Fork this project (Click on **Fork** button).
+2. Clone your forked project to your local machine.
+3. Create a new issue describing about the problem or enhancement that you are going to make.
+4. Create a new branch related to this issue. We suggest to use a name like `issue-10` — 10 is the issue's ID.
+5. Make all the changes necessary and commit.
+6. Push the new branch to your Github repository.
+7. Go to **Marvin.IA** Github project and click on **Compare & Pull Request**.
 
 **Important:**
 
@@ -52,7 +52,7 @@ If you have questions or general suggestions, don't hesitate to submit a new [Gi
 
 ## Contributors
 
-  - [@marvinbraga](https://github.com/marvinbraga) as Marcus Vinicius Braga ([Vlog](https://www.youtube.com/c/marvinbraga/)) ([LinkedIn](https://www.linkedin.com/in/marcus-vinicius-braga-0669444/))
+  - [@marvinbraga](https://github.com/marvinbraga) as Marcus Vinicius Braga ([YouTube](https://www.youtube.com/c/marvinbraga/)) ([LinkedIn](https://www.linkedin.com/in/marcus-vinicius-braga-0669444/))
 
 ## License (MIT)
 
