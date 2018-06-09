@@ -72,19 +72,20 @@ begin
       TIrisDataConverter.New(LStream.DataString).Execute(LIrisInputData, LIrisOutputData);
       { faz o split dos dados para treino e teste }
 
-      { exibe os dados }
-      MemoData.Lines.BeginUpdate;
-      try
-        Self
-          .ShowOriginalData(LStream.DataString)
-          { exibe os dados convertidos }
-          .ShowConvertedData(LIrisInputData, LIrisOutputData);
-
-      finally
-        MemoData.Lines.EndUpdate;
-      end;
     finally
       LStream.Free;
+    end;
+
+    MemoData.Lines.BeginUpdate;
+    try
+      Self
+        { exibe os dados originais }
+        .ShowOriginalData(LStream.DataString)
+        { exibe os dados convertidos }
+        .ShowConvertedData(LIrisInputData, LIrisOutputData);
+
+    finally
+      MemoData.Lines.EndUpdate;
     end;
   end;
 end;
