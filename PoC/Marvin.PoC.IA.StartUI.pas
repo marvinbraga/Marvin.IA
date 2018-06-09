@@ -32,6 +32,7 @@ type
     MemoData: TMemo;
     procedure ButtonLoadFileClick(Sender: TObject);
   private
+    function GetIrisData: TFormStart;
     function ShowOriginalData(const AText: string): TFormStart;
     function ShowConvertedData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
   public
@@ -51,10 +52,16 @@ uses
 {$R *.dfm}
 
 procedure TFormStart.ButtonLoadFileClick(Sender: TObject);
+begin
+  Self.GetIrisData;
+end;
+
+function TFormStart.GetIrisData: TFormStart;
 var
   LStream: TStringStream;
   LIrisInputData, LIrisOutputData: IList<TDoubleArray>;
 begin
+  Result := Self;
   if DlgData.Execute then
   begin
     LStream := TStringStream.Create('', TEncoding.UTF8);
