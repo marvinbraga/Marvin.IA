@@ -21,10 +21,8 @@ object FormStart: TFormStart
     ActivePage = TabDataFile
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 725
     object TabDataFile: TTabSheet
       Caption = 'Data File'
-      ExplicitWidth = 717
       object PanelToolBar: TPanel
         Left = 0
         Top = 0
@@ -34,7 +32,6 @@ object FormStart: TFormStart
         BevelOuter = bvNone
         Caption = ' '
         TabOrder = 0
-        ExplicitWidth = 717
         object ButtonLoadFile: TButton
           AlignWithMargins = True
           Left = 3
@@ -62,18 +59,23 @@ object FormStart: TFormStart
         ParentFont = False
         ScrollBars = ssBoth
         TabOrder = 1
-        ExplicitWidth = 711
       end
     end
     object TabTrain: TTabSheet
       Caption = 'Train'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 717
+      ExplicitHeight = 0
     end
     object TabTest: TTabSheet
       Caption = 'Test'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 717
+      ExplicitHeight = 0
     end
   end
   object DlgData: TFileOpenDialog

@@ -32,6 +32,7 @@ type
     MemoData: TMemo;
     procedure ButtonLoadFileClick(Sender: TObject);
   private
+    function ShowOriginalData(const AText: string): TFormStart;
     function ShowConvertedData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
   public
   end;
@@ -58,15 +59,20 @@ begin
   begin
     LStream := TStringStream.Create('', TEncoding.UTF8);
     try
-      { load pure data file }
-      LStream.LoadFromFile(DlgData.FileName);
-      MemoData.Lines.Text := LStream.DataString;
-      { recupera os dados convertidos }
-      TIrisDataConverter.New(LStream.DataString).Execute(LIrisInputData, LIrisOutputData);
-      { exibe os dados convertidos }
-      Self.ShowConvertedData(LIrisInputData, LIrisOutputData);
-      { faz o split dos dados para treino e teste }
+      MemoData.Lines.BeginUpdate;
+      try
+        { load pure data file }
+        LStream.LoadFromFile(DlgData.FileName);
+        Self.ShowOriginalData(LStream.DataString);
+        { recupera os dados convertidos }
+        TIrisDataConverter.New(LStream.DataString).Execute(LIrisInputData, LIrisOutputData);
+        { exibe os dados convertidos }
+        Self.ShowConvertedData(LIrisInputData, LIrisOutputData);
+        { faz o split dos dados para treino e teste }
 
+      finally
+        MemoData.Lines.EndUpdate;
+      end;
     finally
       LStream.Free;
     end;
@@ -99,6 +105,15 @@ begin
     LInput := AInputData.MoveNext;
     LOutput := AOutputData.MoveNext;
   end;
+end;
+
+function TFormStart.ShowOriginalData(const AText: string): TFormStart;
+begin
+  Result := Self;
+  MemoData.Lines.Text := AText;
+  MemoData.Lines.Insert(0, 'IRIS ORIGINAL DATA');
+  MemoData.Lines.Insert(1, '------------------');
+  MemoData.Lines.Insert(2, '');
 end;
 
 end.
