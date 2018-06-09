@@ -66,16 +66,19 @@ begin
   begin
     LStream := TStringStream.Create('', TEncoding.UTF8);
     try
+      { load pure data file }
+      LStream.LoadFromFile(DlgData.FileName);
+      { recupera os dados convertidos }
+      TIrisDataConverter.New(LStream.DataString).Execute(LIrisInputData, LIrisOutputData);
+      { faz o split dos dados para treino e teste }
+
+      { exibe os dados }
       MemoData.Lines.BeginUpdate;
       try
-        { load pure data file }
-        LStream.LoadFromFile(DlgData.FileName);
-        Self.ShowOriginalData(LStream.DataString);
-        { recupera os dados convertidos }
-        TIrisDataConverter.New(LStream.DataString).Execute(LIrisInputData, LIrisOutputData);
-        { exibe os dados convertidos }
-        Self.ShowConvertedData(LIrisInputData, LIrisOutputData);
-        { faz o split dos dados para treino e teste }
+        Self
+          .ShowOriginalData(LStream.DataString)
+          { exibe os dados convertidos }
+          .ShowConvertedData(LIrisInputData, LIrisOutputData);
 
       finally
         MemoData.Lines.EndUpdate;
