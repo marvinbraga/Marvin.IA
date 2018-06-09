@@ -68,24 +68,23 @@ begin
     try
       { load pure data file }
       LStream.LoadFromFile(DlgData.FileName);
+
       { recupera os dados convertidos }
       TIrisDataConverter.New(LStream.DataString).Execute(LIrisInputData, LIrisOutputData);
       { faz o split dos dados para treino e teste }
 
+      MemoData.Lines.BeginUpdate;
+      try
+        Self
+          { exibe os dados originais }
+          .ShowOriginalData(LStream.DataString)
+          { exibe os dados convertidos }
+          .ShowConvertedData(LIrisInputData, LIrisOutputData);
+      finally
+        MemoData.Lines.EndUpdate;
+      end;
     finally
       LStream.Free;
-    end;
-
-    MemoData.Lines.BeginUpdate;
-    try
-      Self
-        { exibe os dados originais }
-        .ShowOriginalData(LStream.DataString)
-        { exibe os dados convertidos }
-        .ShowConvertedData(LIrisInputData, LIrisOutputData);
-
-    finally
-      MemoData.Lines.EndUpdate;
     end;
   end;
 end;
