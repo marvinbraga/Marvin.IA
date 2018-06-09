@@ -3,7 +3,7 @@ object FormStart: TFormStart
   Top = 0
   Caption = 'PoC Marvin.IA - Open Machine Learning API - Delphi'
   ClientHeight = 600
-  ClientWidth = 725
+  ClientWidth = 952
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,28 +16,25 @@ object FormStart: TFormStart
   object pgcInfo: TPageControl
     Left = 0
     Top = 0
-    Width = 725
+    Width = 952
     Height = 600
     ActivePage = TabDataFile
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 65
-    ExplicitHeight = 535
+    ExplicitWidth = 725
     object TabDataFile: TTabSheet
       Caption = 'Data File'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 507
+      ExplicitWidth = 717
       object PanelToolBar: TPanel
         Left = 0
         Top = 0
-        Width = 717
+        Width = 944
         Height = 33
         Align = alTop
         BevelOuter = bvNone
         Caption = ' '
         TabOrder = 0
+        ExplicitWidth = 717
         object ButtonLoadFile: TButton
           AlignWithMargins = True
           Left = 3
@@ -48,39 +45,35 @@ object FormStart: TFormStart
           Caption = 'Load File...'
           TabOrder = 0
           OnClick = ButtonLoadFileClick
-          ExplicitHeight = 59
         end
       end
       object MemoData: TMemo
         AlignWithMargins = True
         Left = 3
         Top = 36
-        Width = 711
+        Width = 938
         Height = 533
         Align = alClient
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Roboto Mono'
+        Font.Style = []
+        ParentFont = False
         ScrollBars = ssBoth
         TabOrder = 1
-        ExplicitLeft = 264
-        ExplicitTop = 240
-        ExplicitWidth = 185
-        ExplicitHeight = 89
+        ExplicitWidth = 711
       end
     end
     object TabTrain: TTabSheet
       Caption = 'Train'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 507
+      ExplicitWidth = 717
     end
     object TabTest: TTabSheet
       Caption = 'Test'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 507
+      ExplicitWidth = 717
     end
   end
   object DlgData: TFileOpenDialog

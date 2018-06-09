@@ -88,14 +88,14 @@ end;
 function TIrisData.ClassValue: Double;
 const
  LC_SETOSA: string = 'Iris-setosa';
- LC_VERSICOLOUR: string = 'Iris-versicolour';
+ LC_VERSICOLOR: string = 'Iris-versicolor';
  LC_VIRGINICA: string = 'Iris-virginica';
 begin
   if FClassName = LC_SETOSA then
   begin
     Result := 1;
   end
-  else if FClassName = LC_VERSICOLOUR then
+  else if FClassName = LC_VERSICOLOR then
   begin
     Result := 2;
   end
