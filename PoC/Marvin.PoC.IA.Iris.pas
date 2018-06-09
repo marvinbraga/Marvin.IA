@@ -22,7 +22,8 @@ type
     function Sepal: ISize;
     function ClassName: string;
     function ClassValue: Double;
-    function ToDoubleArray: TDoubleArray;
+    function GetInputValues: TDoubleArray;
+    function GetOutputValues: TDoubleArray;
   end;
 
 implementation

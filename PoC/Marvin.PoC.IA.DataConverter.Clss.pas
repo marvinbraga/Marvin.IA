@@ -4,7 +4,7 @@ interface
 
 uses
   System.Classes,
-  System.Generics.Collections,
+  Marvin.Core.InterfacedList,
   Marvin.Core.IA.Connectionist.Classifier,
   Marvin.PoC.IA.DataConverter;
 
@@ -13,7 +13,7 @@ type
   private
     FData: TStrings;
   protected
-    function Execute(out AList: TList<TDoubleArray>): IDataConverter;
+    function Execute(out AInputValues: IList<TDoubleArray>; out AOutputValues: IList<TDoubleArray>): IDataConverter;
     class procedure Split(const ARecord: string; const AList: TStringList; const ADelimitador: Char = ';');
   public
     constructor Create(const ADataText: string);
@@ -25,6 +25,7 @@ implementation
 
 uses
   System.SysUtils,
+  Marvin.PoC.IA.Iris,
   Marvin.PoC.IA.Iris.Clss;
 
 
@@ -43,31 +44,30 @@ begin
   inherited;
 end;
 
-function TIrisDataConverter.Execute(out AList: TList<TDoubleArray>): IDataConverter;
+function TIrisDataConverter.Execute(out AInputValues: IList<TDoubleArray>; out AOutputValues: IList<TDoubleArray>): IDataConverter;
 var
   LIndex: Integer;
   LSplitedRecord: TStringList;
+  LIrisData: IIrisData;
 begin
   Result := Self;
-  AList := TList<TDoubleArray>.Create;
+  AInputValues := TCustomList<TDoubleArray>.Create;
+  AOutputValues := TCustomList<TDoubleArray>.Create;
   { transforma os dados em valores Double }
   LSplitedRecord := TStringList.Create;
   try
     for LIndex := 0 to FData.Count - 1 do
     begin
-      { quebra os dados da string }
       if not(FData[LIndex].Trim.IsEmpty) then
       begin
+        { quebra os dados da string }
         TIrisDataConverter.Split(FData[LIndex], LSplitedRecord);
+        { cria o dado }
+        LIrisData := TIrisData.New(LSplitedRecord[0].ToDouble, LSplitedRecord[1].ToDouble, LSplitedRecord[2].ToDouble, LSplitedRecord[3].ToDouble,
+            LSplitedRecord[4]);
         { converte em TDoubleArray }
-        AList.Add(
-          TIrisData.New(
-            LSplitedRecord[0].ToDouble,
-            LSplitedRecord[1].ToDouble,
-            LSplitedRecord[2].ToDouble,
-            LSplitedRecord[3].ToDouble,
-            LSplitedRecord[4])
-          .ToDoubleArray);
+        AInputValues.Add(LIrisData.GetInputValues);
+        AOutputValues.Add(LIrisData.GetOutputValues);
       end;
     end;
   finally

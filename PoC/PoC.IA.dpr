@@ -13,6 +13,7 @@ uses
 {$R *.res}
 
 begin
+  ReportMemoryLeaksOnShutdown := (DebugHook <> 0);
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Glossy');

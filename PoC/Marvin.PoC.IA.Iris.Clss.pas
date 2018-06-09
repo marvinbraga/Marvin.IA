@@ -18,7 +18,8 @@ type
     function Sepal: ISize;
     function ClassName: string;
     function ClassValue: Double;
-    function ToDoubleArray: TDoubleArray;
+    function GetInputValues: TDoubleArray;
+    function GetOutputValues: TDoubleArray;
   public
     constructor Create(const ASepalLength, ASepalWidth, APetalLength, APetalWidth: Double; const AClassName: string);
     class function New(const ASepalLength, ASepalWidth, APetalLength, APetalWidth: Double; const AClassName: string): IIrisData;
@@ -128,12 +129,25 @@ begin
   Result := FSepal;
 end;
 
-function TIrisData.ToDoubleArray: TDoubleArray;
+function TIrisData.GetInputValues: TDoubleArray;
 begin
   Result := nil;
   SetLength(Result, 4);
   { recupera os valores Double }
-  Result := [FSepal.Length, FSepal.Width, FPetal.Length, FPetal.Width, Self.ClassValue];
+  Result := [FSepal.Length, FSepal.Width, FPetal.Length, FPetal.Width];
+end;
+
+function TIrisData.GetOutputValues: TDoubleArray;
+begin
+  Result := nil;
+  SetLength(Result, 3);
+  { recupera os valores Double }
+  case Trunc(Self.ClassValue) of
+    1: Result := [1, 0, 0];
+    2: Result := [0, 1, 0];
+  else
+    Result := [0, 0, 1];
+  end;
 end;
 
 end.

@@ -41,17 +41,17 @@ implementation
 
 uses
   { marvin }
+  Marvin.Core.InterfacedList,
   Marvin.Core.IA.Connectionist.MLPClassifier.Clss,
   Marvin.PoC.IA.DataConverter,
-  Marvin.PoC.IA.DataConverter.Clss,
-  System.Generics.Collections;
+  Marvin.PoC.IA.DataConverter.Clss;
 
 {$R *.dfm}
 
 procedure TFormStart.ButtonLoadFileClick(Sender: TObject);
 var
   LStream: TStringStream;
-  LIrisData: TList<TDoubleArray>;
+  LIrisInputData, LIrisOutputData: IList<TDoubleArray>;
 begin
   if DlgData.Execute then
   begin
@@ -61,15 +61,11 @@ begin
       LStream.LoadFromFile(DlgData.FileName);
       MemoData.Lines.Text := LStream.DataString;
       { recupera os dados convertidos }
-      TIrisDataConverter.New(LStream.DataString).Execute(LIrisData);
-      try
-        { faz o split dos dados para treino e teste }
+      TIrisDataConverter.New(LStream.DataString).Execute(LIrisInputData, LIrisOutputData);
+      { faz o split dos dados para treino e teste }
 
-      finally
-        LIrisData.Free;
-      end;
     finally
-      FreeAndNil(LStream);
+      LStream.Free;
     end;
   end;
 end;
