@@ -36,6 +36,10 @@ uses
 type
   TDoubleArray = array of Double;
 
+  THelperDoubleArray = record helper for TDoubleArray
+    function Clone: TDoubleArray;
+  end;
+
   IClassifier = interface
     ['{FF28CF74-02E0-437A-96A7-F45B404E8439}']
     function ConfigureClassifier: IClassifier;
@@ -58,5 +62,19 @@ type
   end;
 
 implementation
+
+{ THelperDoubleArray }
+
+function THelperDoubleArray.Clone: TDoubleArray;
+var
+  LIndex: Integer;
+begin
+  Result := nil;
+  SetLength(Result, Length(Self));
+  for LIndex := Low(Self) to High(Self) do
+  begin
+    Result[LIndex] := Self[LIndex];
+  end;
+end;
 
 end.

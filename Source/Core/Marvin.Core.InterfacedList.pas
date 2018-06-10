@@ -61,6 +61,7 @@ type
     function Get: T; overload;
     function Last: T;
     function MoveNext: T;
+    function Exchange(const AIndex1, AIndex2: Integer): IList<T>;
     function Remove(const AItem: T): IList<T>;
     function ToString: string;
   end;
@@ -101,6 +102,7 @@ type
     function Last: T;
     function MoveNext: T;
     function Remove(const AItem: T): IList<T>;
+    function Exchange(const AIndex1, AIndex2: Integer): IList<T>;
   public
     constructor Create; reintroduce; overload;
     constructor Create(const AComparer: IComparer<T>); overload;
@@ -271,6 +273,13 @@ begin
   begin
     FPosition := Self.Count;
   end;
+end;
+
+function TCustomList<T>.Exchange(const AIndex1,
+  AIndex2: Integer): IList<T>;
+begin
+  Result := Self;
+  FList.Exchange(AIndex1, AIndex2);
 end;
 
 function TCustomList<T>.First: T;

@@ -57,8 +57,11 @@ type
     procedure ButtonLoadFileClick(Sender: TObject);
   private
     function GetIrisData: TFormStart;
+    function ShowData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
     function ShowOriginalData(const AText: string): TFormStart;
     function ShowConvertedData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
+    function ShowTreinData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
+    function ShowTestData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
   public
   end;
 
@@ -71,7 +74,8 @@ uses
   { marvin }
   Marvin.Core.IA.Connectionist.MLPClassifier.Clss,
   Marvin.PoC.IA.DataConverter,
-  Marvin.PoC.IA.DataConverter.Clss;
+  Marvin.PoC.IA.DataConverter.Clss,
+  Marvin.Core.IA.Connectionist.TestSplitter.Clss;
 
 {$R *.dfm}
 
@@ -84,6 +88,8 @@ function TFormStart.GetIrisData: TFormStart;
 var
   LStream: TStringStream;
   LIrisInputData, LIrisOutputData: IList<TDoubleArray>;
+  LTreinInputData, LTreinOutputData: IList<TDoubleArray>;
+  LTestInputData, LTestOutputData: IList<TDoubleArray>;
 begin
   Result := Self;
   if DlgData.Execute then
@@ -96,6 +102,7 @@ begin
       { transforma os dados originais para o formato compatível e ajustado }
       TIrisDataConverter.New(LStream.DataString).Execute(LIrisInputData, LIrisOutputData);
       { faz o split dos dados para treino e teste }
+      TTestSplitter.New(LIrisInputData, LIrisOutputData, 0.3).ExecuteSplit(LTreinInputData, LTreinOutputData, LTestInputData, LTestOutputData);
 
       MemoData.Lines.BeginUpdate;
       try
@@ -103,7 +110,11 @@ begin
           { exibe os dados originais }
           .ShowOriginalData(LStream.DataString)
           { exibe os dados convertidos }
-          .ShowConvertedData(LIrisInputData, LIrisOutputData);
+          .ShowConvertedData(LIrisInputData, LIrisOutputData)
+          { exibe os dados de treino }
+          .ShowTreinData(LTreinInputData, LTreinOutputData)
+          { exibe os dados de teste }
+          .ShowTestData(LTestInputData, LTestOutputData);
       finally
         MemoData.Lines.EndUpdate;
       end;
@@ -113,8 +124,7 @@ begin
   end;
 end;
 
-function TFormStart.ShowConvertedData(const AInputData,
-  AOutputData: IList<TDoubleArray>): TFormStart;
+function TFormStart.ShowData(const AInputData, AOutputData: IList<TDoubleArray>): TFormStart;
 var
   LInput, LOutput: TDoubleArray;
 begin
@@ -122,19 +132,11 @@ begin
   { recupera os dados }
   LInput := AInputData.First;
   LOutput := AOutputData.First;
-
-  MemoData.Lines.Add('');
-  MemoData.Lines.Add('IRIS CONVERTED DATA');
-  MemoData.Lines.Add('-------------------');
-  MemoData.Lines.Add('');
   { percorre todos os dados }
-  while not(AInputData.Eof) do
+  while not (AInputData.Eof) do
   begin
     { exibe }
-    MemoData.Lines.Add(Format('Inputs: [%3.8f, %3.8f, %3.8f, %3.8f]; Outputs: [%3.8f, %3.8f, %3.8f]', [
-      LInput[0], LInput[1], LInput[2], LInput[3],
-      LOutput[0], LOutput[1], LOutput[2]
-    ]));
+    MemoData.Lines.Add(Format('Inputs: [%3.8f, %3.8f, %3.8f, %3.8f]; Outputs: [%3.8f, %3.8f, %3.8f]', [LInput[0], LInput[1], LInput[2], LInput[3], LOutput[0], LOutput[1], LOutput[2]]));
     { recupera os dados }
     LInput := AInputData.MoveNext;
     LOutput := AOutputData.MoveNext;
@@ -145,9 +147,39 @@ function TFormStart.ShowOriginalData(const AText: string): TFormStart;
 begin
   Result := Self;
   MemoData.Lines.Text := AText;
-  MemoData.Lines.Insert(0, 'IRIS ORIGINAL DATA');
+  MemoData.Lines.Insert(0, Format('IRIS ORIGINAL DATA: (%d)', [MemoData.Lines.Count]));
   MemoData.Lines.Insert(1, '------------------');
   MemoData.Lines.Insert(2, '');
+end;
+
+function TFormStart.ShowConvertedData(const AInputData, AOutputData: IList<TDoubleArray>): TFormStart;
+begin
+  Result := Self;
+  MemoData.Lines.Add('');
+  MemoData.Lines.Add(Format('IRIS CONVERTED DATA: (%d)', [AInputData.Count]));
+  MemoData.Lines.Add('-------------------');
+  MemoData.Lines.Add('');
+  Self.ShowData(AInputData, AOutputData);
+end;
+
+function TFormStart.ShowTestData(const AInputData, AOutputData: IList<TDoubleArray>): TFormStart;
+begin
+  Result := Self;
+  MemoData.Lines.Add('');
+  MemoData.Lines.Add(Format('IRIS TEST DATA: (%d)', [AInputData.Count]));
+  MemoData.Lines.Add('--------------');
+  MemoData.Lines.Add('');
+  Self.ShowData(AInputData, AOutputData);
+end;
+
+function TFormStart.ShowTreinData(const AInputData, AOutputData: IList<TDoubleArray>): TFormStart;
+begin
+  Result := Self;
+  MemoData.Lines.Add('');
+  MemoData.Lines.Add(Format('IRIS TREIN DATA: (%d)', [AInputData.Count]));
+  MemoData.Lines.Add('---------------');
+  MemoData.Lines.Add('');
+  Self.ShowData(AInputData, AOutputData);
 end;
 
 end.

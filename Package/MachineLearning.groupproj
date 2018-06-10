@@ -10,7 +10,7 @@
             <Dependencies/>
         </Projects>
         <Projects Include="..\PoC\PoC.IA.dproj">
-            <Dependencies/>
+            <Dependencies>Marvin.Core.dproj;Marvin.Core.IA.Connectionist.dproj</Dependencies>
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
@@ -38,13 +38,13 @@
     <Target Name="Marvin_Core_IA_Connectionist:Make">
         <MSBuild Projects="Marvin.Core.IA.Connectionist.dproj" Targets="Make"/>
     </Target>
-    <Target Name="PoC_IA">
+    <Target Name="PoC_IA" DependsOnTargets="Marvin.Core;Marvin.Core.IA.Connectionist">
         <MSBuild Projects="..\PoC\PoC.IA.dproj"/>
     </Target>
-    <Target Name="PoC_IA:Clean">
+    <Target Name="PoC_IA:Clean" DependsOnTargets="Marvin.Core:Clean;Marvin.Core.IA.Connectionist:Clean">
         <MSBuild Projects="..\PoC\PoC.IA.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="PoC_IA:Make">
+    <Target Name="PoC_IA:Make" DependsOnTargets="Marvin.Core:Make;Marvin.Core.IA.Connectionist:Make">
         <MSBuild Projects="..\PoC\PoC.IA.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
