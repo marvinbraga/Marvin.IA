@@ -40,7 +40,6 @@ type
     FTestSize: Double;
     FIsShuffle: Boolean;
   private
-    function CloneDoubleArray(const AValue: TDoubleArray): TDoubleArray;
     function GetData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TTestSplitter;
     function Shuffle(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TTestSplitter;
     function Split(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>;
@@ -56,19 +55,6 @@ type
 implementation
 
 { TTestSplitter }
-
-function TTestSplitter.CloneDoubleArray(
-  const AValue: TDoubleArray): TDoubleArray;
-var
-  LIndex: Integer;
-begin
-  Result := nil;
-  SetLength(Result, Length(AValue));
-  for LIndex := Low(AValue) to High(AValue) do
-  begin
-    Result[LIndex] := AValue[LIndex];
-  end;
-end;
 
 constructor TTestSplitter.Create(const AInputData, AOutputData: IList<TDoubleArray>; const ATestSize: Double; const AIsShuffle: Boolean);
 begin
