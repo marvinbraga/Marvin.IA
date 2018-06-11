@@ -16,8 +16,9 @@ We want to write elegant, clean, and maintainable code using OOP.
 
 * Fully interface-based.
 * Memory is released automatically.
-* All public methods are implementations of interface methods.
-* All public methods return an interface instance or primitive type.
+* Public methods should be used only for contructors (Create and New) and destructors (Destroy).
+* All protected methods are implementations of interface methods.
+* All protected methods return an interface instance or primitive type.
 * No usage of nil/NULL in arguments or returns.
 * No algorithms in constructors.
 * No getters and setters.

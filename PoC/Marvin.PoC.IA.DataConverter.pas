@@ -1,4 +1,4 @@
-unit Marvin.Core.IA.Connectionist.Synapses;
+unit Marvin.PoC.IA.DataConverter;
 
 {
   MIT License
@@ -27,13 +27,14 @@ unit Marvin.Core.IA.Connectionist.Synapses;
 interface
 
 uses
-  Marvin.Core.IA.Connectionist.Synapse,
+  System.Generics.Collections,
+  Marvin.Core.IA.Connectionist.Classifier,
   Marvin.Core.InterfacedList;
 
 type
-  ISynapses = interface
-    function List: IList<ISynapse>;
-    function ToString: string;
+  IDataConverter = interface
+    ['{3E020966-878E-4EE7-9495-508B37FCE12C}']
+    function Execute(out AInputValues: IList<TDoubleArray>; out AOutputValues: IList<TDoubleArray>): IDataConverter;
   end;
 
 implementation

@@ -1,4 +1,4 @@
-unit Marvin.Core.IA.Connectionist.Synapses;
+unit Marvin.Core.IA.Connectionist.TestSplitter;
 
 {
   MIT License
@@ -27,13 +27,14 @@ unit Marvin.Core.IA.Connectionist.Synapses;
 interface
 
 uses
-  Marvin.Core.IA.Connectionist.Synapse,
-  Marvin.Core.InterfacedList;
+  { marvin }
+  Marvin.Core.InterfacedList,
+  Marvin.Core.IA.Connectionist.Classifier;
 
 type
-  ISynapses = interface
-    function List: IList<ISynapse>;
-    function ToString: string;
+  ITestSplitter = interface
+    ['{BC4B3C35-12B8-4EE1-9349-1F9EA14D84C7}']
+    function ExecuteSplit(out AInputTrainData: IList<TDoubleArray>; out AOutputTrainData: IList<TDoubleArray>; out AInputTestData: IList<TDoubleArray>; out AOutputTestData: IList<TDoubleArray>): ITestSplitter;
   end;
 
 implementation

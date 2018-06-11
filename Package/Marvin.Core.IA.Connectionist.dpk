@@ -58,6 +58,8 @@ contains
   Marvin.Core.IA.Connectionist.ValueConvertion.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.ValueConvertion.Clss.pas',
   Marvin.Core.IA.Connectionist.ValueConvertion in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.ValueConvertion.pas',
   Marvin.Core.IA.Connectionist.MLPClassifier.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.MLPClassifier.Clss.pas',
-  Marvin.Core.IA.Connectionist.Classifier in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Classifier.pas';
+  Marvin.Core.IA.Connectionist.Classifier in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Classifier.pas',
+  Marvin.Core.IA.Connectionist.TestSplitter.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.TestSplitter.Clss.pas',
+  Marvin.Core.IA.Connectionist.TestSplitter in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.TestSplitter.pas';
 
 end.
