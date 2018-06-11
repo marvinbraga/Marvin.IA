@@ -62,6 +62,7 @@ type
     function ShowConvertedData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
     function ShowTreinData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
     function ShowTestData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
+    function ShowPredictedData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>; const AFitCost: Double; const APredictCost: Double): TFormStart;
   public
   end;
 
@@ -80,8 +81,17 @@ uses
 {$R *.dfm}
 
 procedure TFormStart.ButtonLoadFileClick(Sender: TObject);
+var
+  LCursor: TCursor;
 begin
-  Self.GetIrisData;
+  LCursor := Screen.Cursor;
+  Screen.Cursor := crHourGlass;
+  try
+    Application.ProcessMessages;
+    Self.GetIrisData;
+  finally
+    Screen.Cursor := LCursor;
+  end;
 end;
 
 function TFormStart.GetIrisData: TFormStart;
@@ -90,6 +100,9 @@ var
   LIrisInputData, LIrisOutputData: IList<TDoubleArray>;
   LTreinInputData, LTreinOutputData: IList<TDoubleArray>;
   LTestInputData, LTestOutputData: IList<TDoubleArray>;
+  LPredictedOutputData: IList<TDoubleArray>;
+  LMlp: IClassifier;
+  LPredictCost, LFitCost: Double;
 begin
   Result := Self;
   if DlgData.Execute then
@@ -103,6 +116,10 @@ begin
       TIrisDataConverter.New(LStream.DataString).Execute(LIrisInputData, LIrisOutputData);
       { faz o split dos dados para treino e teste }
       TTestSplitter.New(LIrisInputData, LIrisOutputData, 0.3).ExecuteSplit(LTreinInputData, LTreinOutputData, LTestInputData, LTestOutputData);
+      { cria o classificardor }
+      LMlp := TMLPClassifier.New;
+      LFitCost := LMlp.Fit(LTreinInputData, LTreinOutputData).Cost;
+      LPredictCost := LMlp.Predict(LTestInputData, LPredictedOutputData).Cost;
 
       MemoData.Lines.BeginUpdate;
       try
@@ -114,7 +131,10 @@ begin
           { exibe os dados de treino }
           .ShowTreinData(LTreinInputData, LTreinOutputData)
           { exibe os dados de teste }
-          .ShowTestData(LTestInputData, LTestOutputData);
+          .ShowTestData(LTestInputData, LTestOutputData)
+          { exibe os dados da classificação }
+          .ShowPredictedData(LTestInputData, LPredictedOutputData, LFitCost, LPredictCost)
+        ;
       finally
         MemoData.Lines.EndUpdate;
       end;
@@ -150,6 +170,19 @@ begin
   MemoData.Lines.Insert(0, Format('IRIS ORIGINAL DATA: (%d)', [MemoData.Lines.Count]));
   MemoData.Lines.Insert(1, '------------------');
   MemoData.Lines.Insert(2, '');
+end;
+
+function TFormStart.ShowPredictedData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>; const AFitCost: Double; const APredictCost: Double): TFormStart;
+begin
+  Result := Self;
+  MemoData.Lines.Add('');
+  MemoData.Lines.Add(Format('IRIS PREDICTED DATA: (%d)', [AInputData.Count]));
+  MemoData.Lines.Add('-------------------');
+  MemoData.Lines.Add('');
+  Self.ShowData(AInputData, AOutputData);
+  MemoData.Lines.Add('');
+  MemoData.Lines.Add(Format('FIT COST .....: (%2.8f)', [AFitCost]));
+  MemoData.Lines.Add(Format('PREDICT COST .: (%2.8f)', [APredictCost]));
 end;
 
 function TFormStart.ShowConvertedData(const AInputData, AOutputData: IList<TDoubleArray>): TFormStart;
