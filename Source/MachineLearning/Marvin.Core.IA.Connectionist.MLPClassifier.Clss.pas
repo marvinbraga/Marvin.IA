@@ -27,9 +27,8 @@ unit Marvin.Core.IA.Connectionist.MLPClassifier.Clss;
 interface
 
 uses
-  { embarcadero }
-  System.Generics.Collections,
   { marvin }
+  Marvin.Core.InterfacedList,
   Marvin.Core.IA.Connectionist.Classifier,
   Marvin.Core.IA.Connectionist.MultiLayerPerceptron,
   Marvin.Core.IA.Connectionist.Activation;
@@ -38,8 +37,8 @@ type
   TMLPClassifier = class sealed(TInterfacedObject, IClassifier)
   private
     FMlp: IMultiLayerPerceptron;
-    FInputData: TList<TDoubleArray>;
-    FOutputData: TList<TDoubleArray>;
+    FInputData: IList<TDoubleArray>;
+    FOutputData: IList<TDoubleArray>;
     { hyper parameters }
     FHiddenLayerSizes: Integer; { Number of neurons in the hidden layer. }
     FActivation: IActivation; { Activation function for the hidden layer. }
@@ -80,12 +79,12 @@ type
     function Cost: Double;
     { treino }
     function Fit(const ATrainDataInputs: TDoubleArray; const ATrainDataOutputs: TDoubleArray): IClassifier; overload;
-    function Fit(const ATrainDataInputs: TList<TDoubleArray>; const ATrainDataOutputs: TList<TDoubleArray>): IClassifier; overload;
-    function Fit(const ATrainDataInputs: TList<TList<Double>>; const ATrainDataOutputs: TList<TList<Double>>): IClassifier; overload;
+    function Fit(const ATrainDataInputs: IList<TDoubleArray>; const ATrainDataOutputs: IList<TDoubleArray>): IClassifier; overload;
+    function Fit(const ATrainDataInputs: IList<IList<Double>>; const ATrainDataOutputs: IList<IList<Double>>): IClassifier; overload;
     { teste }
     function Predict(const ATestDataInputs: TDoubleArray; out APredictedDataOutputs: TDoubleArray): IClassifier; overload;
-    function Predict(const ATestDataInputs: TList<TDoubleArray>; out APredictedDataOutputs: TList<TDoubleArray>): IClassifier; overload;
-    function Predict(const ATestDataInputs: TList<TList<Double>>; out APredictedDataOutputs: TList<TList<Double>>): IClassifier; overload;
+    function Predict(const ATestDataInputs: IList<TDoubleArray>; out APredictedDataOutputs: IList<TDoubleArray>): IClassifier; overload;
+    function Predict(const ATestDataInputs: IList<IList<Double>>; out APredictedDataOutputs: IList<IList<Double>>): IClassifier; overload;
   protected
     function InitMlp: TMLPClassifier;
     function InitData: TMLPClassifier;
@@ -93,8 +92,8 @@ type
     function SetInputsMinMaxValues(const AMinValue: Double; const AMaxValue: Double): TMLPClassifier;
     function SetOutputsMinMaxValues(const AMinValue: Double; const AMaxValue: Double): TMLPClassifier;
     function GetMinMaxValues(var AMinValue: Double; var AMaxValue: Double): TMLPClassifier;
-    function Build(const ATrainDataInputs: TList<TDoubleArray>; const ATrainDataOutputs: TList<TDoubleArray>): TMLPClassifier;
-    function Train(const ATrainDataInputs: TList<TDoubleArray>; const ATrainDataOutputs: TList<TDoubleArray>): TMLPClassifier;
+    function Build(const ATrainDataInputs: IList<TDoubleArray>; const ATrainDataOutputs: IList<TDoubleArray>): TMLPClassifier;
+    function Train(const ATrainDataInputs: IList<TDoubleArray>; const ATrainDataOutputs: IList<TDoubleArray>): TMLPClassifier;
     function PrepareMlp: TMLPClassifier;
   public
     constructor Create(const ALearningFile: string = 'Marvin.Neural.Learning.mlp'; const AIsForceLoad: Boolean = False; AHiddenLayerSizes: Integer = 100; ALearning: Double = 0.9; AMomentum: Double = 0.9; AMaxIter: Integer = 200); overload;
@@ -159,7 +158,7 @@ begin
   Result := FEpoch;
 end;
 
-function TMLPClassifier.Build(const ATrainDataInputs, ATrainDataOutputs: TList<TDoubleArray>): TMLPClassifier;
+function TMLPClassifier.Build(const ATrainDataInputs, ATrainDataOutputs: IList<TDoubleArray>): TMLPClassifier;
 var
   LMinValue, LMaxValue: Double;
   LNumberOfInputs: Integer;
@@ -168,11 +167,11 @@ begin
   Result := Self;
   FMlp.SetLearnFile(FLearningFile);
   { recupera os dados }
-  FInputData.AddRange(ATrainDataInputs);
-  FOutputData.AddRange(ATrainDataOutputs);
+  FInputData.Add(ATrainDataInputs);
+  FOutputData.Add(ATrainDataOutputs);
   { verifica a estrutura da rede, inputs e outputs }
-  LNumberOfInputs := Length(FInputData[0]);
-  LNumberOfOutputs := Length(FOutputData[0]);
+  LNumberOfInputs := Length(FInputData.Get(0));
+  LNumberOfOutputs := Length(FOutputData.Get(0));
   { verifica máximos e mínimos }
   Self.GetMinMaxValues(LMinValue, LMaxValue);
   { neurônios da camada de entrada }
@@ -195,12 +194,12 @@ end;
 
 function TMLPClassifier.ClearData: TMLPClassifier;
 
-  procedure LClear(AList: TList<TDoubleArray>);
+  procedure LClear(AList: IList<TDoubleArray>);
   begin
     if Assigned(AList) then
     begin
       AList.Clear;
-      FreeAndNil(AList);
+      AList := nil;
     end;
   end;
 
@@ -213,8 +212,8 @@ end;
 function TMLPClassifier.InitData: TMLPClassifier;
 begin
   Result := Self;
-  FInputData := TList<TDoubleArray>.Create;
-  FOutputData := TList<TDoubleArray>.Create;
+  FInputData := TCustomList<TDoubleArray>.Create;
+  FOutputData := TCustomList<TDoubleArray>.Create;
 end;
 
 function TMLPClassifier.InitMlp: TMLPClassifier;
@@ -247,11 +246,11 @@ begin
   { inicializa a rede }
   Result := Self.ConfigureClassifier;
   { recupera os dados }
-  FInputData.AddRange(ATrainDataInputs);
-  FOutputData.AddRange(ATrainDataOutputs);
+  FInputData.Add(ATrainDataInputs);
+  FOutputData.Add(ATrainDataOutputs);
 end;
 
-function TMLPClassifier.Fit(const ATrainDataInputs, ATrainDataOutputs: TList<TDoubleArray>): IClassifier;
+function TMLPClassifier.Fit(const ATrainDataInputs, ATrainDataOutputs: IList<TDoubleArray>): IClassifier;
 begin
   { inicializa a rede }
   Result := Self.ConfigureClassifier;
@@ -260,7 +259,7 @@ begin
     .Train(ATrainDataInputs, ATrainDataOutputs);
 end;
 
-function TMLPClassifier.Fit(const ATrainDataInputs, ATrainDataOutputs: TList<TList<Double>>): IClassifier;
+function TMLPClassifier.Fit(const ATrainDataInputs, ATrainDataOutputs: IList<IList<Double>>): IClassifier;
 begin
   { inicializa a rede }
   Result := Self.ConfigureClassifier;
@@ -278,12 +277,12 @@ begin
   { verifica máximos e mínimos }
   AMinValue := 1E9;
   AMaxValue := -1E9;
-  LNumberOfInputs := Length(FInputData[0]);
+  LNumberOfInputs := Length(FInputData.Get(0));
   for LRecordCount := 0 to FInputData.Count - 1 do
   begin
     for LIndex := 0 to LNumberOfInputs - 1 do
     begin
-      LValue := TDoubleArray(FInputData[LRecordCount])[LIndex];
+      LValue := TDoubleArray(FInputData.Get(LRecordCount))[LIndex];
       if LValue < AMinValue then
       begin
         AMinValue := LValue;
@@ -302,7 +301,7 @@ begin
 
 end;
 
-function TMLPClassifier.Predict(const ATestDataInputs: TList<TDoubleArray>; out APredictedDataOutputs: TList<TDoubleArray>): IClassifier;
+function TMLPClassifier.Predict(const ATestDataInputs: IList<TDoubleArray>; out APredictedDataOutputs: IList<TDoubleArray>): IClassifier;
 var
   LNumberOfOutputs: Integer;
   LIndex, LRecordCount: Integer;
@@ -315,15 +314,15 @@ begin
   { recupera a quantidade de neurônios  }
   LNumberOfOutputs := FMlp.GetOutputLayer.NeuronsCount;
   { cria a lista de resultados }
-  APredictedDataOutputs := TList<TDoubleArray>.Create;
+  APredictedDataOutputs := TCustomList<TDoubleArray>.Create;
   { percorre os dados para teste }
   for LRecordCount := 0 to ATestDataInputs.Count - 1 do
   begin
     { percorre as entradas }
-    for LIndex := 0 to Length(ATestDataInputs[LRecordCount]) - 1 do
+    for LIndex := 0 to Length(ATestDataInputs.Get(LRecordCount)) - 1 do
     begin
       { recupera o valor para teste }
-      LValue := TDoubleArray(ATestDataInputs[LRecordCount])[LIndex];
+      LValue := TDoubleArray(ATestDataInputs.Get(LRecordCount))[LIndex];
       { informa o valor à rede }
       FMlp.SetInputValue(LIndex, LValue);
     end;
@@ -343,7 +342,7 @@ begin
   end;
 end;
 
-function TMLPClassifier.Predict(const ATestDataInputs: TList<TList<Double>>; out APredictedDataOutputs: TList<TList<Double>>): IClassifier;
+function TMLPClassifier.Predict(const ATestDataInputs: IList<IList<Double>>; out APredictedDataOutputs: IList<IList<Double>>): IClassifier;
 begin
   Result := Self;
 
@@ -387,7 +386,7 @@ var
   LIndex, LNumberOfInputs: Integer;
 begin
   Result := Self;
-  LNumberOfInputs := Length(FInputData[0]);
+  LNumberOfInputs := Length(FInputData.Get(0));
   for LIndex := 0 to LNumberOfInputs - 1 do
   begin
     FMlp.SetInputMinMaxValues(LIndex, AMinValue, AMaxValue);
@@ -430,7 +429,7 @@ begin
   end;
 end;
 
-function TMLPClassifier.Train(const ATrainDataInputs, ATrainDataOutputs: TList<TDoubleArray>): TMLPClassifier;
+function TMLPClassifier.Train(const ATrainDataInputs, ATrainDataOutputs: IList<TDoubleArray>): TMLPClassifier;
 var
   LInputIndex, LIndex, LCicle: Integer;
   LNumberOfInputs, LNumberOfOutputs: Integer;
@@ -452,7 +451,7 @@ begin
       while LInputIndex <= (LNumberOfInputs - 1) do
       begin
         { passa o valor para a rede }
-        FMlp.SetInputValue(LInputIndex, TDoubleArray(FInputData[LIndex])[LInputIndex]);
+        FMlp.SetInputValue(LInputIndex, TDoubleArray(FInputData.Get(LIndex))[LInputIndex]);
         Inc(LInputIndex);
       end;
       LInputIndex := 0;
@@ -460,7 +459,7 @@ begin
       while LInputIndex <= (LNumberOfOutputs - 1) do
       begin
         { passa o valor para a rede }
-        FMlp.SetOutputValue(LInputIndex, TDoubleArray(FOutputData[LIndex])[LInputIndex]);
+        FMlp.SetOutputValue(LInputIndex, TDoubleArray(FOutputData.Get(LIndex))[LInputIndex]);
         Inc(LInputIndex);
       end;
       { executa o treino }

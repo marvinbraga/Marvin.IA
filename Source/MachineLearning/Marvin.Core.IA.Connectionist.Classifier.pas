@@ -27,8 +27,6 @@ unit Marvin.Core.IA.Connectionist.Classifier;
 interface
 
 uses
-  { embarcadero }
-  System.Generics.Collections,
   { marvin }
   Marvin.Core.InterfacedList,
   Marvin.Core.IA.Connectionist.Activation;
@@ -53,12 +51,12 @@ type
     function Epoch: Integer;
     { treino }
     function Fit(const ATrainDataInputs: TDoubleArray; const ATrainDataOutputs: TDoubleArray): IClassifier; overload;
-    function Fit(const ATrainDataInputs: TList<TDoubleArray>; const ATrainDataOutputs: TList<TDoubleArray>): IClassifier; overload;
-    function Fit(const ATrainDataInputs: TList<TList<Double>>; const ATrainDataOutputs: TList<TList<Double>>): IClassifier; overload;
+    function Fit(const ATrainDataInputs: IList<TDoubleArray>; const ATrainDataOutputs: IList<TDoubleArray>): IClassifier; overload;
+    function Fit(const ATrainDataInputs: IList<IList<Double>>; const ATrainDataOutputs: IList<IList<Double>>): IClassifier; overload;
     { teste }
     function Predict(const ATestDataInputs: TDoubleArray; out APredictedDataOutputs: TDoubleArray): IClassifier; overload;
-    function Predict(const ATestDataInputs: TList<TDoubleArray>; out APredictedDataOutputs: TList<TDoubleArray>): IClassifier; overload;
-    function Predict(const ATestDataInputs: TList<TList<Double>>; out APredictedDataOutputs: TList<TList<Double>>): IClassifier; overload;
+    function Predict(const ATestDataInputs: IList<TDoubleArray>; out APredictedDataOutputs: IList<TDoubleArray>): IClassifier; overload;
+    function Predict(const ATestDataInputs: IList<IList<Double>>; out APredictedDataOutputs: IList<IList<Double>>): IClassifier; overload;
   end;
 
 implementation
