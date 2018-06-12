@@ -38,6 +38,7 @@ type
     function Clone: TDoubleArray;
     function IsMaxValue(const AValue: Double): Double;
     function ToBinaryValue: TDoubleArray;
+    function ToString: string;
   end;
 
   IClassifier = interface
@@ -64,7 +65,9 @@ type
 implementation
 
 uses
-  System.Math;
+  { embarcadero }
+  System.Math,
+  System.SysUtils;
 
 { THelperDoubleArray }
 
@@ -81,8 +84,6 @@ begin
 end;
 
 function THelperDoubleArray.IsMaxValue(const AValue: Double): Double;
-var
-  LIndex: Integer;
 begin
   Result := 0;
   if MaxValue(Self) = AValue then
@@ -110,6 +111,20 @@ begin
   Result := Self;
   LToBinary(MaxDouble, MinDouble);
   LToBinary(1, 0);
+end;
+
+function THelperDoubleArray.ToString: string;
+var
+  LIndex: Integer;
+begin
+  Result := EmptyStr;
+  for LIndex := Low(Self) to High(Self) do
+  begin
+    Result := Result + Self[LIndex].ToString + ', ';
+  end;
+  Result := Result.Trim;
+  Delete(Result, Length(Result), 1);
+  Result := Format('[%s]', [Result]);
 end;
 
 end.

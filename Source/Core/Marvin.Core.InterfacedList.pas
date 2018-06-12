@@ -64,6 +64,7 @@ type
     function Exchange(const AIndex1, AIndex2: Integer): IList<T>;
     function Remove(const AItem: T): IList<T>;
     function ToString: string;
+    function Position: Integer;
   end;
 
   { lista interfaceada }
@@ -103,6 +104,7 @@ type
     function MoveNext: T;
     function Remove(const AItem: T): IList<T>;
     function Exchange(const AIndex1, AIndex2: Integer): IList<T>;
+    function Position: Integer;
   public
     constructor Create; reintroduce; overload;
     constructor Create(const AComparer: IComparer<T>); overload;
@@ -312,6 +314,11 @@ begin
   begin
     Result := Self.Get;
   end;
+end;
+
+function TCustomList<T>.Position: Integer;
+begin
+  Result := FPosition;
 end;
 
 function TCustomList<T>.Remove(const AItem: T): IList<T>;
