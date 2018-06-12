@@ -114,7 +114,7 @@ implementation
 
 uses
   { embarcadero }
-  Windows;
+  Winapi.Windows;
 
 resourcestring
   RS_EInvalidReferencesMessage = 'Existem referências inválidas na lista.';
