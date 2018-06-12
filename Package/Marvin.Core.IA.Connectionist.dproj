@@ -6,7 +6,7 @@
         <FrameworkType>None</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <TargetedPlatforms>131</TargetedPlatforms>
         <AppType>Package</AppType>
     </PropertyGroup>
@@ -197,8 +197,8 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="..\Bin\Win32\Debug\Marvin.Core.IA.Connectionist.bpl" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
+                <DeployFile LocalName="Bin\Win64\Debug\Marvin_Core_IA_Connectionist.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
                         <RemoteName>Marvin_Core_IA_Connectionist.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -223,8 +223,8 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Bin\Win64\Debug\Marvin_Core_IA_Connectionist.bpl" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win64">
+                <DeployFile LocalName="..\Bin\Win32\Debug\Marvin.Core.IA.Connectionist.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
                         <RemoteName>Marvin_Core_IA_Connectionist.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
