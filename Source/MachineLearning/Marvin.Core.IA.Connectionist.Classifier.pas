@@ -92,32 +92,24 @@ begin
 end;
 
 function THelperDoubleArray.ToBinaryValue: TDoubleArray;
-var
-  LIndex: Integer;
+
+  procedure LToBinary(const AMax, AMin: Double);
+  var
+    LIndex: Integer;
+  begin
+    for LIndex := Low(Self) to High(Self) do
+    begin
+      if Self[LIndex] = MaxValue(Self) then
+        Self[LIndex] := AMax
+      else
+        Self[LIndex] := AMin;
+    end;
+  end;
+
 begin
   Result := Self;
-  for LIndex := Low(Self) to High(Self) do
-  begin
-    if Self[LIndex] = MaxValue(Self) then
-    begin
-      Self[LIndex] := MaxDouble;
-    end
-    else
-    begin
-      Self[LIndex] := MinDouble;
-    end;
-  end;
-  for LIndex := Low(Self) to High(Self) do
-  begin
-    if Self[LIndex] = MaxDouble then
-    begin
-      Self[LIndex] := 1;
-    end
-    else
-    begin
-      Self[LIndex] := 0;
-    end;
-  end;
+  LToBinary(MaxDouble, MinDouble);
+  LToBinary(1, 0);
 end;
 
 end.
