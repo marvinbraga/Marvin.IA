@@ -155,8 +155,13 @@ begin
   { percorre todos os dados }
   while not (AInputData.Eof) do
   begin
+    { converte o resultado as saídas para 0 ou 1 }
+    LOutput.ToBinaryValue;
     { exibe }
-    MemoData.Lines.Add(Format('Inputs: [%3.8f, %3.8f, %3.8f, %3.8f]; Outputs: [%3.8f, %3.8f, %3.8f]', [LInput[0], LInput[1], LInput[2], LInput[3], LOutput[0], LOutput[1], LOutput[2]]));
+    MemoData.Lines.Add(Format('Inputs: [%3.8f, %3.8f, %3.8f, %3.8f]; Outputs: [%3.8f, %3.8f, %3.8f]', [
+      LInput[0],  LInput[1],  LInput[2], LInput[3],
+      LOutput[0], LOutput[1], LOutput[2]
+    ]));
     { recupera os dados }
     LInput := AInputData.MoveNext;
     LOutput := AOutputData.MoveNext;

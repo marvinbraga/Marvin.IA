@@ -36,6 +36,8 @@ type
 
   THelperDoubleArray = record helper for TDoubleArray
     function Clone: TDoubleArray;
+    function IsMaxValue(const AValue: Double): Double;
+    function ToBinaryValue: TDoubleArray;
   end;
 
   IClassifier = interface
@@ -61,6 +63,9 @@ type
 
 implementation
 
+uses
+  System.Math;
+
 { THelperDoubleArray }
 
 function THelperDoubleArray.Clone: TDoubleArray;
@@ -72,6 +77,46 @@ begin
   for LIndex := Low(Self) to High(Self) do
   begin
     Result[LIndex] := Self[LIndex];
+  end;
+end;
+
+function THelperDoubleArray.IsMaxValue(const AValue: Double): Double;
+var
+  LIndex: Integer;
+begin
+  Result := 0;
+  if MaxValue(Self) = AValue then
+  begin
+    Result := 1;
+  end;
+end;
+
+function THelperDoubleArray.ToBinaryValue: TDoubleArray;
+var
+  LIndex: Integer;
+begin
+  Result := Self;
+  for LIndex := Low(Self) to High(Self) do
+  begin
+    if Self[LIndex] = MaxValue(Self) then
+    begin
+      Self[LIndex] := MaxDouble;
+    end
+    else
+    begin
+      Self[LIndex] := MinDouble;
+    end;
+  end;
+  for LIndex := Low(Self) to High(Self) do
+  begin
+    if Self[LIndex] = MaxDouble then
+    begin
+      Self[LIndex] := 1;
+    end
+    else
+    begin
+      Self[LIndex] := 0;
+    end;
   end;
 end;
 
