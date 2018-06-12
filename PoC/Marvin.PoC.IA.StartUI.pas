@@ -63,6 +63,7 @@ type
     function ShowTreinData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
     function ShowTestData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
     function ShowPredictedData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>; const AFitCost: Double; const APredictCost: Double): TFormStart;
+    function ShowResume(const ATestOutputData: IList<TDoubleArray>; const APredictedData: IList<TDoubleArray>): TFormStart;
   public
   end;
 
@@ -134,6 +135,8 @@ begin
           .ShowTestData(LTestInputData, LTestOutputData)
           { exibe os dados da classificação }
           .ShowPredictedData(LTestInputData, LPredictedOutputData, LFitCost, LPredictCost)
+          { exibe o resumo }
+          .ShowResume(LTestOutputData, LPredictedOutputData)
         ;
       finally
         MemoData.Lines.EndUpdate;
@@ -188,6 +191,36 @@ begin
   MemoData.Lines.Add('');
   MemoData.Lines.Add(Format('FIT COST .....: (%2.8f)', [AFitCost]));
   MemoData.Lines.Add(Format('PREDICT COST .: (%2.8f)', [APredictCost]));
+end;
+
+function TFormStart.ShowResume(const ATestOutputData: IList<TDoubleArray>; const APredictedData: IList<TDoubleArray>): TFormStart;
+const
+  LC_CORRECT: string = 'Correct';
+  LC_INCORRECT: string = '<-- INCORRECT';
+var
+  LTestData, LPredictedData: TDoubleArray;
+  LResult: string;
+begin
+  Result := Self;
+  MemoData.Lines.Add('');
+  MemoData.Lines.Add(Format('RESUME: (%d)', [ATestOutputData.Count]));
+  MemoData.Lines.Add('------');
+  MemoData.Lines.Add('');
+
+  LTestData := ATestOutputData.First;
+  LPredictedData := APredictedData.First;
+  while not(ATestOutputData.Eof) do
+  begin
+    LResult := LC_INCORRECT;
+    if SameText(LTestData.ToString, LPredictedData.ToString) then
+    begin
+      LResult := LC_CORRECT;
+    end;
+    MemoData.Lines.Add(Format('%d: %s, %s (%s)', [ATestOutputData.Position + 1, LTestData.ToString, LPredictedData.ToString, LResult]));
+    { recupera o próximo dado }
+    LTestData := ATestOutputData.MoveNext;
+    LPredictedData := APredictedData.MoveNext;
+  end;
 end;
 
 function TFormStart.ShowConvertedData(const AInputData, AOutputData: IList<TDoubleArray>): TFormStart;
