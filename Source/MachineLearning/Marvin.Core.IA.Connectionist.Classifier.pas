@@ -33,6 +33,7 @@ uses
 
 type
   TDoubleArray = array of Double;
+  TDoubleMatrix = array of TDoubleArray;
 
   THelperDoubleArray = record helper for TDoubleArray
     function Clone: TDoubleArray;
