@@ -74,9 +74,9 @@ implementation
 
 uses
   { marvin }
-  Marvin.Core.IA.Connectionist.MLPClassifier.Clss,
   Marvin.PoC.IA.DataConverter,
   Marvin.PoC.IA.DataConverter.Clss,
+  Marvin.Core.IA.Connectionist.MLPClassifier.Clss,
   Marvin.Core.IA.Connectionist.TestSplitter.Clss;
 
 {$R *.dfm}
