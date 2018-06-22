@@ -12,7 +12,7 @@ This API is being written in [Delphi](https://www.embarcadero.com/products/delph
 
 **Why**. I want to use Object Pascal (OP) with Machine Learning. The OP is an elegant and very easy language. 
 My desire is to contribute to the entire developer community. 
-I want to keep and write all the code in an elegant, clean and maintainable code using OOP.
+I want to keep and write all project in an elegant, clean and maintainable code using OOP.
 
 **Principles.** The code has some design principles:
 
