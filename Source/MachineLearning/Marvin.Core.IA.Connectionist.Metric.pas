@@ -35,6 +35,8 @@ type
   IMetric = interface
     ['{55E40DD1-5B4A-4000-B7F3-54903C4EC980}']
     function Calculate(const ATestOutputData: IList<TDoubleArray>; const APredictedData: IList<TDoubleArray>): IMetric;
+    function Value: Double;
+    function Count: Integer;
   end;
 
   IConfusionMatrix = interface

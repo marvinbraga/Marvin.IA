@@ -35,7 +35,22 @@ uses
 
 implementation
 
+uses
+  System.SysUtils;
+
 type
+  TAccuracy = class(TInterfacedObject, IMetric)
+  private
+    FValue: Double;
+    FCount: Integer;
+  protected
+    function Calculate(const ATestOutputData, APredictedData: IList<TDoubleArray>): IMetric;
+    function Value: Double;
+    function Count: Integer;
+  public
+    class function New: IMetric;
+  end;
+
   TConfusionMatrix = class(TInterfacedObject, IConfusionMatrix)
   private
     FConfusionMatrix: TDoubleMatrix;
@@ -76,7 +91,52 @@ begin
   { informa o tamanho da matriz }
   SetLength(FConfusionMatrix, Length(ATestOutputData.Get(0)));
 
+end;
 
+{ TAccuracy }
+
+function TAccuracy.Calculate(const ATestOutputData, APredictedData: IList<TDoubleArray>): IMetric;
+var
+  LCount: Double;
+  LTestValue, LPredictValue: string;
+begin
+  FCount := 0;
+  LCount := ATestOutputData.Count;
+  if LCount = 0 then
+  begin
+    LCount := 1;
+  end;
+  { calcula }
+  LTestValue := ATestOutputData.First.ToString;
+  LPredictValue := APredictedData.First.ToString;
+  while not ATestOutputData.Eof do
+  begin
+    { achou um acerto }
+    if SameText(LTestValue, LPredictValue) then
+    begin
+      { calcula a contagem }
+      FCount := FCount + 1;
+    end;
+    LTestValue := ATestOutputData.MoveNext.ToString;
+    LPredictValue := APredictedData.MoveNext.ToString;
+  end;
+  { calcula o percentual da acurácia }
+  FValue := FCount / LCount;
+end;
+
+function TAccuracy.Count: Integer;
+begin
+  Result := FCount;
+end;
+
+class function TAccuracy.New: IMetric;
+begin
+  Result := TAccuracy.Create;
+end;
+
+function TAccuracy.Value: Double;
+begin
+  Result := FValue;
 end;
 
 end.
