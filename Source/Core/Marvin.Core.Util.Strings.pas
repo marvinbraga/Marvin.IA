@@ -11,6 +11,11 @@ type
     class procedure Split(const ALine: string; const AList: TStringList; const ADelimitador: Char = ';'; const AQuoteChar: Char = '"');
   end;
 
+  TStringListHelper = class helper for TStringList
+  public
+    procedure Split(const ALine: string; const ADelimitador: Char = ';'; const AQuoteChar: Char = '"');
+  end;
+
 implementation
 
 { TUtilStrings }
@@ -23,6 +28,13 @@ begin
   AList.Delimiter := ADelimitador;
   AList.QuoteChar := AQuoteChar;
   AList.DelimitedText := ALine;
+end;
+
+{ TStringListHelper }
+
+procedure TStringListHelper.Split(const ALine: string; const ADelimitador, AQuoteChar: Char);
+begin
+  TUtilStrings.Split(ALine, Self, ADelimitador, AQuoteChar);
 end;
 
 end.
