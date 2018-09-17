@@ -70,22 +70,4 @@ object FormStart: TFormStart
       ImageIndex = 2
     end
   end
-  object DlgData: TFileOpenDialog
-    DefaultExtension = '*.csv'
-    FavoriteLinks = <>
-    FileTypes = <
-      item
-        DisplayName = 'CSV Files'
-        FileMask = '*.csv'
-      end
-      item
-        DisplayName = 'All Files'
-        FileMask = '*.*'
-      end>
-    OkButtonLabel = 'Load File'
-    Options = []
-    Title = 'Select Data File'
-    Left = 680
-    Top = 16
-  end
 end

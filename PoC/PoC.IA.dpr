@@ -2,9 +2,9 @@ program PoC.IA;
 
 uses
   Vcl.Forms,
-  Marvin.PoC.IA.StartUI in 'Marvin.PoC.IA.StartUI.pas' {FormStart},
   Vcl.Themes,
   Vcl.Styles,
+  Marvin.PoC.IA.StartUI in 'Marvin.PoC.IA.StartUI.pas' {FormStart},
   Marvin.PoC.IA.Iris.Clss in 'Marvin.PoC.IA.Iris.Clss.pas',
   Marvin.PoC.IA.Iris in 'Marvin.PoC.IA.Iris.pas',
   Marvin.PoC.IA.DataConverter in 'Marvin.PoC.IA.DataConverter.pas',
@@ -13,7 +13,9 @@ uses
 {$R *.res}
 
 begin
+  {$WARNINGS OFF}
   ReportMemoryLeaksOnShutdown := (DebugHook <> 0);
+  {$WARNINGS ON}
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Glossy');

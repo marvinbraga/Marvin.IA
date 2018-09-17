@@ -48,7 +48,6 @@ type
   TFormStart = class(TForm)
     PanelToolBar: TPanel;
     ButtonLoadFile: TButton;
-    DlgData: TFileOpenDialog;
     pgcInfo: TPageControl;
     TabDataFile: TTabSheet;
     TabTrain: TTabSheet;
@@ -75,9 +74,11 @@ implementation
 uses
   { marvin }
   Marvin.PoC.IA.DataConverter,
+  Marvin.Core.IA.Connectionist.Metric,
   Marvin.PoC.IA.DataConverter.Clss,
   Marvin.Core.IA.Connectionist.MLPClassifier.Clss,
-  Marvin.Core.IA.Connectionist.TestSplitter.Clss;
+  Marvin.Core.IA.Connectionist.TestSplitter.Clss,
+  Marvin.Core.IA.Connectionist.Metric.Clss;
 
 {$R *.dfm}
 
@@ -104,14 +105,31 @@ var
   LPredictedOutputData: IList<TDoubleArray>;
   LMlp: IClassifier;
   LPredictCost, LFitCost: Double;
+  LFileName: string;
+  LExecute: Boolean;
 begin
   Result := Self;
-  if DlgData.Execute then
+  {$WARNINGS OFF}
+  with TFileOpenDialog.Create(nil) do
+  begin
+    try
+      LExecute := Execute;
+      if LExecute then
+      begin
+        LFileName := FileName;
+      end;
+    finally
+      Free;
+    end;
+  end;
+  {$WARNINGS ON}
+
+  if LExecute then
   begin
     LStream := TStringStream.Create('', TEncoding.UTF8);
     try
       { load pure data file }
-      LStream.LoadFromFile(DlgData.FileName);
+      LStream.LoadFromFile(LFileName);
 
       { transforma os dados originais para o formato compatível e ajustado }
       TIrisDataConverter.New(LStream.DataString).Execute(LIrisInputData, LIrisOutputData);
@@ -200,6 +218,7 @@ const
 var
   LTestData, LPredictedData: TDoubleArray;
   LResult: string;
+  LAccuracy: IMetric;
 begin
   Result := Self;
   MemoData.Lines.Add('');
@@ -221,6 +240,10 @@ begin
     LTestData := ATestOutputData.MoveNext;
     LPredictedData := APredictedData.MoveNext;
   end;
+
+  LAccuracy := TAccuracy.New.Calculate(ATestOutputData, APredictedData);
+  MemoData.Lines.Add('');
+  MemoData.Lines.Add(Format('Accuracy: Count = %d, Value = %2.8f', [LAccuracy.Count, LAccuracy.Value]));
 end;
 
 function TFormStart.ShowConvertedData(const AInputData, AOutputData: IList<TDoubleArray>): TFormStart;
