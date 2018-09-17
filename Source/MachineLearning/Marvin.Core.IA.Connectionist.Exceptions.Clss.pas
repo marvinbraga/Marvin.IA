@@ -51,6 +51,22 @@ type
     constructor Create; override;
   end;
 
+  EInputDataIsEmpty = class(EConnectionistExceptionBase)
+  public
+    constructor Create; override;
+  end;
+
+  EOutputDataIsEmpty = class(EConnectionistExceptionBase)
+  public
+    constructor Create; override;
+  end;
+
+  EInconsistentData = class(EConnectionistExceptionBase)
+  public
+    constructor Create; override;
+  end;
+
+
 implementation
 
 { EConnectionistExceptionBase }
@@ -82,6 +98,30 @@ constructor EInvalidFactory.Create;
 begin
   inherited;
   Self.Message := 'Factory não implementado.';
+end;
+
+{ EInputDataIsEmpty }
+
+constructor EInputDataIsEmpty.Create;
+begin
+  inherited;
+  Self.Message := 'Não existem dados de entrada.';
+end;
+
+{ EOutputDataIsEmpty }
+
+constructor EOutputDataIsEmpty.Create;
+begin
+  inherited;
+  Self.Message := 'Não existem dados de saída.';
+end;
+
+{ EInconsistentData }
+
+constructor EInconsistentData.Create;
+begin
+  inherited;
+  Self.Message := 'Os dados estão incosistentes.';
 end;
 
 end.

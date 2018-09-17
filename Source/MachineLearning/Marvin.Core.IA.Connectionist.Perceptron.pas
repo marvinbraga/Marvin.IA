@@ -1,4 +1,4 @@
-unit Marvin.Core.IA.Connectionist.Metric;
+unit Marvin.Core.IA.Connectionist.Perceptron;
 
 {
   MIT License
@@ -27,22 +27,16 @@ unit Marvin.Core.IA.Connectionist.Metric;
 interface
 
 uses
-  { marvin }
   Marvin.Core.InterfacedList,
   Marvin.Core.IA.Connectionist.Classifier;
 
 type
-  IMetric = interface
-    ['{55E40DD1-5B4A-4000-B7F3-54903C4EC980}']
-    function Calculate(const ATestOutputData: IList<TDoubleArray>; const APredictedData: IList<TDoubleArray>): IMetric;
-    function Value: Double;
-    function Count: Integer;
-  end;
-
-  IConfusionMatrix = interface
-    ['{9CBC2158-4B90-497B-A57F-E27BBD68FF2A}']
-    function Calculate(const ATestOutputData: IList<TDoubleArray>; const APredictedData: IList<TDoubleArray>): IConfusionMatrix;
-    function Matrix: TDoubleMatrix;
+  IPerceptron = interface
+    ['{5ED3EC67-B7A7-4C42-B8BC-6254B562596D}']
+    function Inputs: IList<TDoubleArray>;
+    function Outputs: IList<TDoubleArray>;
+    function Fit(const AInputs: IList<TDoubleArray>; const AOutputs: IList<TDoubleArray>): IPerceptron;
+    function Predict(const AInputs: IList<TDoubleArray>; const AOutputs: IList<TDoubleArray>): IPerceptron;
   end;
 
 implementation

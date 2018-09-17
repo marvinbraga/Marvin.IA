@@ -12,6 +12,9 @@
         <Projects Include="..\PoC\PoC.IA.dproj">
             <Dependencies>Marvin.Core.dproj;Marvin.Core.IA.Connectionist.dproj</Dependencies>
         </Projects>
+        <Projects Include="..\PoC\PoCPerceptron.dproj">
+            <Dependencies>Marvin.Core.dproj;Marvin.Core.IA.Connectionist.dproj</Dependencies>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -47,14 +50,23 @@
     <Target Name="PoC_IA:Make" DependsOnTargets="Marvin.Core:Make;Marvin.Core.IA.Connectionist:Make">
         <MSBuild Projects="..\PoC\PoC.IA.dproj" Targets="Make"/>
     </Target>
+    <Target Name="PoCPerceptron" DependsOnTargets="Marvin.Core;Marvin.Core.IA.Connectionist">
+        <MSBuild Projects="..\PoC\PoCPerceptron.dproj"/>
+    </Target>
+    <Target Name="PoCPerceptron:Clean" DependsOnTargets="Marvin.Core:Clean;Marvin.Core.IA.Connectionist:Clean">
+        <MSBuild Projects="..\PoC\PoCPerceptron.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="PoCPerceptron:Make" DependsOnTargets="Marvin.Core:Make;Marvin.Core.IA.Connectionist:Make">
+        <MSBuild Projects="..\PoC\PoCPerceptron.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Marvin_Core;Marvin_Core_IA_Connectionist;PoC_IA"/>
+        <CallTarget Targets="Marvin_Core;Marvin_Core_IA_Connectionist;PoC_IA;PoCPerceptron"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Marvin_Core:Clean;Marvin_Core_IA_Connectionist:Clean;PoC_IA:Clean"/>
+        <CallTarget Targets="Marvin_Core:Clean;Marvin_Core_IA_Connectionist:Clean;PoC_IA:Clean;PoCPerceptron:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Marvin_Core:Make;Marvin_Core_IA_Connectionist:Make;PoC_IA:Make"/>
+        <CallTarget Targets="Marvin_Core:Make;Marvin_Core_IA_Connectionist:Make;PoC_IA:Make;PoCPerceptron:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

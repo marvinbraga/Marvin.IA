@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{CE06E146-5B90-48E9-A4D0-14470A9E5047}</ProjectGuid>
-        <ProjectVersion>18.3</ProjectVersion>
+        <ProjectVersion>18.4</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <MainSource>PoC.IA.dpr</MainSource>
         <Base>True</Base>
@@ -105,7 +105,6 @@
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppEnableHighDPI>true</AppEnableHighDPI>
-        <DCC_UnitSearchPath>..\Dcus\$(Platform)\$(Config);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
@@ -135,7 +134,6 @@
         </DelphiCompile>
         <DCCReference Include="Marvin.PoC.IA.StartUI.pas">
             <Form>FormStart</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Marvin.PoC.IA.Iris.Clss.pas"/>
         <DCCReference Include="Marvin.PoC.IA.Iris.pas"/>

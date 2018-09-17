@@ -62,6 +62,8 @@ contains
   Marvin.Core.IA.Connectionist.TestSplitter.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.TestSplitter.Clss.pas',
   Marvin.Core.IA.Connectionist.TestSplitter in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.TestSplitter.pas',
   Marvin.Core.IA.Connectionist.Metric.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Metric.Clss.pas',
-  Marvin.Core.IA.Connectionist.Metric in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Metric.pas';
+  Marvin.Core.IA.Connectionist.Metric in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Metric.pas',
+  Marvin.Core.IA.Connectionist.Perceptron.Clss in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Perceptron.Clss.pas',
+  Marvin.Core.IA.Connectionist.Perceptron in '..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Perceptron.pas';
 
 end.

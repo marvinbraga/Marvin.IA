@@ -33,31 +33,43 @@ uses
   Marvin.Core.IA.Connectionist.Classifier,
   Marvin.Core.IA.Connectionist.Metric;
 
-implementation
-
 type
+  TAccuracy = class(TInterfacedObject, IMetric)
+  private
+    FValue: Double;
+    FCount: Integer;
+  protected
+    function Calculate(const ATestOutputData, APredictedData: IList<TDoubleArray>): IMetric;
+    function Value: Double;
+    function Count: Integer;
+  public
+    class function New: IMetric;
+  end;
+
   TConfusionMatrix = class(TInterfacedObject, IConfusionMatrix)
   private
     FConfusionMatrix: TDoubleMatrix;
+    function Configure(const ATestOutputData: IList<TDoubleArray>; const APredictedData: IList<TDoubleArray>): TConfusionMatrix;
+    function GetClasses(const ATestOutputData: IList<TDoubleArray>; out AClasses: array of string): TConfusionMatrix;
   protected
     function Calculate(const ATestOutputData: IList<TDoubleArray>; const APredictedData: IList<TDoubleArray>): IConfusionMatrix;
     function Matrix: TDoubleMatrix;
   public
-    constructor Create;
     class function New: IConfusionMatrix;
-    destructor Destroy; override;
   end;
+
+implementation
+
+uses
+  System.SysUtils,
+  System.Generics.Collections,
+  System.Generics.Defaults;
 
 { TConfusionMatrix }
 
-constructor TConfusionMatrix.Create;
+class function TConfusionMatrix.New: IConfusionMatrix;
 begin
-  inherited Create;
-end;
-
-destructor TConfusionMatrix.Destroy;
-begin
-  inherited;
+  Result := TConfusionMatrix.Create;
 end;
 
 function TConfusionMatrix.Matrix: TDoubleMatrix;
@@ -65,18 +77,120 @@ begin
   Result := FConfusionMatrix;
 end;
 
-class function TConfusionMatrix.New: IConfusionMatrix;
+function TConfusionMatrix.Configure(const ATestOutputData, APredictedData: IList<TDoubleArray>): TConfusionMatrix;
+var
+  LSize, LIndex: Integer;
 begin
-  Result := TConfusionMatrix.Create;
+  Result := Self;
+  LSize := Length(ATestOutputData.Get(0));
+  { cria as linhas com "cabeçalho" = 0 e "total" = N }
+  SetLength(FConfusionMatrix, LSize + 2);
+  { cria as colunas }
+  for LIndex := Low(FConfusionMatrix) to High(FConfusionMatrix) do
+  begin
+    { com "descrição de item" = 0, "acurácia" = N-3, "precisão" = N-2, "Recall" = N-1 e "FScore" = N }
+    SetLength(FConfusionMatrix[LIndex], LSize + 5);
+  end;
+end;
+
+function TConfusionMatrix.GetClasses(const ATestOutputData: IList<TDoubleArray>; out AClasses: array of string): TConfusionMatrix;
+var
+  LCount, LTotal: Integer;
+  LTestValue: string;
+  LClasses: array of string;
+begin
+  Result := Self;
+  LCount := ATestOutputData.Count;
+  LTotal := 0;
+  if LCount > 0 then
+  begin
+    { calcula }
+    LTestValue := ATestOutputData.First.ToString;
+    { ajusta o tamanho do array que irá conter as classes }
+    SetLength(LClasses, LCount);
+    { recupera as classes }
+    LClasses[0] := LTestValue;
+    LTotal := 1;
+    while not ATestOutputData.Eof do
+    begin
+      LTestValue := ATestOutputData.MoveNext.ToString;
+      if (LTestValue <> LClasses[LTotal - 1]) then
+      begin
+        LClasses[LTotal] := LTestValue;
+        Inc(LTotal);
+      end;
+    end;
+  end;
+  { ajusta o tamanho }
+  SetLength(LClasses, LTotal);
+  { ordena }
+  TArray.Sort<string>(LClasses, TStringComparer.Ordinal);
+  //AClasses := LClasses;
 end;
 
 function TConfusionMatrix.Calculate(const ATestOutputData: IList<TDoubleArray>; const APredictedData: IList<TDoubleArray>): IConfusionMatrix;
+var
+  LClasses: array of string;
 begin
   Result := Self;
-  { informa o tamanho da matriz }
-  SetLength(FConfusionMatrix, Length(ATestOutputData.Get(0)));
+  Self
+    { configura a matrix }
+    .Configure(ATestOutputData, APredictedData)
+    { recupera as classes }
+    .GetClasses(ATestOutputData, LClasses);
 
+  { popula a matriz }
 
+end;
+
+{ TAccuracy }
+
+class function TAccuracy.New: IMetric;
+begin
+  Result := TAccuracy.Create;
+end;
+
+function TAccuracy.Calculate(const ATestOutputData, APredictedData: IList<TDoubleArray>): IMetric;
+var
+  LCount: Double;
+  LTestValue, LPredictValue: string;
+begin
+  Result := Self;
+  FCount := 0;
+  LCount := ATestOutputData.Count;
+  if LCount > 0 then
+  begin
+    { calcula }
+    LTestValue := ATestOutputData.First.ToString;
+    LPredictValue := APredictedData.First.ToString;
+    while not ATestOutputData.Eof do
+    begin
+      { achou um acerto }
+      if SameText(LTestValue, LPredictValue) then
+      begin
+        { calcula a contagem }
+        FCount := FCount + 1;
+      end;
+      LTestValue := ATestOutputData.MoveNext.ToString;
+      LPredictValue := APredictedData.MoveNext.ToString;
+    end;
+  end
+  else
+  begin
+    LCount := 1;
+  end;
+  { calcula o percentual da acurácia }
+  FValue := FCount / LCount;
+end;
+
+function TAccuracy.Count: Integer;
+begin
+  Result := FCount;
+end;
+
+function TAccuracy.Value: Double;
+begin
+  Result := FValue;
 end;
 
 end.

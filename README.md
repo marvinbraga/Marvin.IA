@@ -1,6 +1,8 @@
 # Marvin.IA
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/marvinbraga/Marvin.IA/edit/master/READ_ME.md)
+[![Author](https://img.shields.io/badge/author-Marcus%20Vinicius%20Braga-blue.svg)](https://www.linkedin.com/in/marcus-vinicius-braga-0669444/)
+[![Compatibility](https://img.shields.io/badge/compatibility-Delphi%20Tokyo%20-red.svg)](https://www.embarcadero.com/products/delphi)
 
 Marvin.IA is a machine learning collection of object-oriented Pascal primitives (only interfaces and classes). 
 
@@ -8,9 +10,9 @@ Marvin.IA is a machine learning collection of object-oriented Pascal primitives 
 
 This API is being written in [Delphi](https://www.embarcadero.com/products/delphi). However, making it compatible with [Free Pascal](https://freepascal.org/) and [Lazarus](http://www.lazarus-ide.org/) is possible (we are depending on more contributors to make it possible).
 
-**Why**. We don't want to write procedural code anymore.
-The goal is to replace common procedural code in our projects, which has so many conditionals and "controllers", to a declarative and object-oriented code.
-We want to write elegant, clean, and maintainable code using OOP.
+**Why**. I want to use Object Pascal (OP) with Machine Learning. The OP is an elegant and very easy language. 
+My desire is to contribute to the entire developer community. 
+I want to keep and write all project in an elegant, clean and maintainable code using OOP.
 
 **Principles.** The code has some design principles:
 

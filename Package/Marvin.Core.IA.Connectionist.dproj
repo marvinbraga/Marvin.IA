@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{6DDFA5DA-9A85-408A-B769-F9252FADCE75}</ProjectGuid>
         <MainSource>Marvin.Core.IA.Connectionist.dpk</MainSource>
-        <ProjectVersion>18.3</ProjectVersion>
+        <ProjectVersion>18.4</ProjectVersion>
         <FrameworkType>None</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
@@ -173,6 +173,8 @@
         <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.TestSplitter.pas"/>
         <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Metric.Clss.pas"/>
         <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Metric.pas"/>
+        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Perceptron.Clss.pas"/>
+        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Perceptron.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -594,7 +596,6 @@
                 <Platform value="iOSDevice32">False</Platform>
                 <Platform value="iOSDevice64">False</Platform>
                 <Platform value="iOSSimulator">False</Platform>
-                <Platform value="Linux64">False</Platform>
                 <Platform value="OSX32">False</Platform>
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">True</Platform>

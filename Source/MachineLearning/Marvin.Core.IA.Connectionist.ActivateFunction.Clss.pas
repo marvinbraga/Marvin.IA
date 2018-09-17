@@ -36,6 +36,12 @@ type
     class function New: IActivation;
   end;
 
+  TSignalActivation = class(TInterfacedObject, IActivation)
+  public
+    function Execute(const AValue: Double): Double;
+    class function New: IActivation;
+  end;
+
   TSigmoidActivation = class(TInterfacedObject, IActivation)
   public
     function Execute(const AValue: Double): Double;
@@ -87,6 +93,22 @@ end;
 class function TDegreeActivation.New: IActivation;
 begin
   Result := TDegreeActivation.Create;
+end;
+
+{ TSignalActivation }
+
+function TSignalActivation.Execute(const AValue: Double): Double;
+begin
+  Result := -1;
+  if AValue >= 0 then
+  begin
+    Result := 1;
+  end;
+end;
+
+class function TSignalActivation.New: IActivation;
+begin
+  Result := TSignalActivation.Create;
 end;
 
 { THyperbolicTangentActivation }
