@@ -22,6 +22,7 @@ unit Marvin.Core.IA.Connectionist.Metric.Clss;
   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
+
 }
 
 interface
@@ -83,12 +84,12 @@ var
 begin
   Result := Self;
   LSize := Length(ATestOutputData.Get(0));
-  { cria as linhas com "cabeÁalho" = 0 e "total" = N }
+  { cria as linhas com "cabe√ßalho" = 0 e "total" = N }
   SetLength(FConfusionMatrix, LSize + 2);
   { cria as colunas }
   for LIndex := Low(FConfusionMatrix) to High(FConfusionMatrix) do
   begin
-    { com "descriÁ„o de item" = 0, "acur·cia" = N-3, "precis„o" = N-2, "Recall" = N-1 e "FScore" = N }
+    { com "descri√ß√£o de item" = 0, "acur√°cia" = N-3, "precis√£o" = N-2, "Recall" = N-1 e "FScore" = N }
     SetLength(FConfusionMatrix[LIndex], LSize + 5);
   end;
 end;
@@ -106,7 +107,7 @@ begin
   begin
     { calcula }
     LTestValue := ATestOutputData.First.ToString;
-    { ajusta o tamanho do array que ir· conter as classes }
+    { ajusta o tamanho do array que ir√° conter as classes }
     SetLength(LClasses, LCount);
     { recupera as classes }
     LClasses[0] := LTestValue;
@@ -179,7 +180,7 @@ begin
   begin
     LCount := 1;
   end;
-  { calcula o percentual da acur·cia }
+  { calcula o percentual da acur√°cia }
   FValue := FCount / LCount;
 end;
 
@@ -194,4 +195,3 @@ begin
 end;
 
 end.
-
