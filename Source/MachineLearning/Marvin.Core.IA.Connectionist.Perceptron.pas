@@ -37,6 +37,11 @@ type
     function Outputs: IList<TDoubleArray>;
     function Fit(const AInputs: IList<TDoubleArray>; const AOutputs: IList<TDoubleArray>): IPerceptron;
     function Predict(const AInputs: IList<TDoubleArray>; const AOutputs: IList<TDoubleArray>): IPerceptron;
+    function Epochs: Integer;
+    function LearningRate: Double;
+    function Bias: Double;
+    function Weights: TDoubleArray;
+    function EpochsCovered: Integer;
   end;
 
 implementation

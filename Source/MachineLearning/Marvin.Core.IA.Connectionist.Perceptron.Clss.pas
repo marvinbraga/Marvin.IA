@@ -40,6 +40,7 @@ type
     FLearningRate: Double;
     FAttributesCount: Integer;
     FEpochs: Integer;
+    FEpochsCovered: Integer;
     FInputs: IList<TDoubleArray>;
     FOutputs: IList<TDoubleArray>;
     FWeights: TDoubleArray;
@@ -52,6 +53,11 @@ type
     function Outputs: IList<TDoubleArray>;
     function Fit(const AInputs: IList<TDoubleArray>; const AOutputs: IList<TDoubleArray>): IPerceptron;
     function Predict(const AInputs: IList<TDoubleArray>; const AOutputs: IList<TDoubleArray>): IPerceptron;
+    function Epochs: Integer;
+    function LearningRate: Double;
+    function Bias: Double;
+    function Weights: TDoubleArray;
+    function EpochsCovered: Integer;
   public
     constructor Create(const AActivation: IActivation; const ABias: Double; const ALearningRate: Double = 0.1; AEpochs: Integer = 1000);
     destructor Destroy; override;
@@ -73,6 +79,7 @@ end;
 constructor TPerceptron.Create(const AActivation: IActivation; const ABias: Double; const ALearningRate: Double = 0.1; AEpochs: Integer = 1000);
 begin
   inherited Create;
+  FEpochsCovered := 0;
   FBias := ABias;
   FActivation := AActivation;
   FLearningRate := ALearningRate;
@@ -88,9 +95,24 @@ begin
   inherited;
 end;
 
+function TPerceptron.Epochs: Integer;
+begin
+  Result := FEpochs;
+end;
+
+function TPerceptron.EpochsCovered: Integer;
+begin
+  Result:= FEpochsCovered;
+end;
+
 function TPerceptron.Inputs: IList<TDoubleArray>;
 begin
   Result := FInputs;
+end;
+
+function TPerceptron.LearningRate: Double;
+begin
+  Result:= FLearningRate;
 end;
 
 function TPerceptron.Outputs: IList<TDoubleArray>;
@@ -162,6 +184,7 @@ begin
     Inc(LEpoch);
 
   until not(LError) or (LEpoch > FEpochs);
+  FEpochsCovered := LEpoch;
 end;
 
 function TPerceptron.Predict(const AInputs: IList<TDoubleArray>; const AOutputs: IList<TDoubleArray>): IPerceptron;
@@ -195,6 +218,11 @@ begin
     { próxima entrada }
     LInputData := AInputs.MoveNext;
   end;
+end;
+
+function TPerceptron.Weights: TDoubleArray;
+begin
+  Result:= FWeights;
 end;
 
 function TPerceptron.GuardData: TPerceptron;
@@ -250,6 +278,11 @@ begin
     { inicializa os pesos com números aleatórios entre 0 e 1 }
     FWeights[LIndex] := (Random(99) + 1) / 100;
   end;
+end;
+
+function TPerceptron.Bias: Double;
+begin
+  Result:= FBias;
 end;
 
 end.
