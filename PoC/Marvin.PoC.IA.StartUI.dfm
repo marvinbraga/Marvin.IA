@@ -64,10 +64,18 @@ object FormStart: TFormStart
     object TabTrain: TTabSheet
       Caption = 'Train'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object TabTest: TTabSheet
       Caption = 'Test'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
   end
 end

@@ -76,6 +76,7 @@ uses
   Marvin.PoC.IA.DataConverter,
   Marvin.Core.IA.Connectionist.Metric,
   Marvin.PoC.IA.DataConverter.Clss,
+  Marvin.Core.IA.Connectionist.ActivateFunction.Clss,
   Marvin.Core.IA.Connectionist.MLPClassifier.Clss,
   Marvin.Core.IA.Connectionist.TestSplitter.Clss,
   Marvin.Core.IA.Connectionist.Metric.Clss;
@@ -136,7 +137,7 @@ begin
       { faz o split dos dados para treino e teste }
       TTestSplitter.New(LIrisInputData, LIrisOutputData, 0.3).ExecuteSplit(LTreinInputData, LTreinOutputData, LTestInputData, LTestOutputData);
       { cria o classificardor }
-      LMlp := TMLPClassifier.New;
+      LMlp := TMLPClassifier.New(TSigmoidActivation.New, 2, [8, 8], 0.9, 0.9, 5000);
       LFitCost := LMlp.Fit(LTreinInputData, LTreinOutputData).Cost;
       LPredictCost := LMlp.Predict(LTestInputData, LPredictedOutputData).Cost;
 
