@@ -45,7 +45,7 @@ type
   IClassifier = interface
     ['{FF28CF74-02E0-437A-96A7-F45B404E8439}']
     function ConfigureClassifier: IClassifier;
-    function SetHiddenLayerSizes(const AHiddenLayerSizes: Integer): IClassifier;
+    function SetHiddenLayerSizes(const AHiddenLayerCount: Word; const AHiddenLayerNeuronsCount: array of Word): IClassifier;
     function SetActivation(const AActivation: IActivation): IClassifier;
     function SetLearningFile(const ALearningFile: string): IClassifier;
     function SetLearning(const ALearning: Double): IClassifier;

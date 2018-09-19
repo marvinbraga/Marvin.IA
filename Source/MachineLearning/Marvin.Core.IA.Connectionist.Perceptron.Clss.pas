@@ -33,7 +33,7 @@ uses
   Marvin.Core.IA.Connectionist.Perceptron;
 
 type
-  TPerceptron = class(TInterfacedObject, IPerceptron)
+  TPerceptron = class sealed(TInterfacedObject, IPerceptron)
   private
     FBias: Double;
     FActivation: IActivation;
