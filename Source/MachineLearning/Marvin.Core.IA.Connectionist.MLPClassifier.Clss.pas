@@ -64,7 +64,8 @@ type
     // FBetaValue1: Double;
     // FBetaValue2: Double;
     // FEpsilon: Double;
-    FEpoch: Integer;
+    FEpochs: Integer;
+    FEpochsCovered: Integer;
     FCost: Double;
     FIsForceLoad: Boolean;
   protected
@@ -76,7 +77,8 @@ type
     function SetMaxIter(const AMaxIter: Integer): IClassifier;
     function SetMomentum(const AMomentum: Double): IClassifier;
     function ConfigureClassifier: IClassifier;
-    function Epoch: Integer;
+    function Epochs: Integer;
+    function EpochsCovered: Integer;
     function Cost: Double;
     { treino }
     function Fit(const ATrainDataInputs: TDoubleArray; const ATrainDataOutputs: TDoubleArray): IClassifier; overload;
@@ -152,9 +154,14 @@ begin
   inherited;
 end;
 
-function TMLPClassifier.Epoch: Integer;
+function TMLPClassifier.Epochs: Integer;
 begin
-  Result := FEpoch;
+  Result := FEpochs;
+end;
+
+function TMLPClassifier.EpochsCovered: Integer;
+begin
+  Result := FEpochsCovered;
 end;
 
 function TMLPClassifier.Build(const ATrainDataInputs, ATrainDataOutputs: IList<TDoubleArray>): TMLPClassifier;
@@ -441,41 +448,42 @@ end;
 
 function TMLPClassifier.Train(const ATrainDataInputs, ATrainDataOutputs: IList<TDoubleArray>): TMLPClassifier;
 var
-  LInputIndex, LIndex, LCicle: Integer;
+  LDataIndex, LIndex, LCicle: Integer;
   LNumberOfInputs, LNumberOfOutputs: Integer;
 begin
   Result := Self;
    { Treinamento }
-  FEpoch := 0; // conta o número de épocas
+  FEpochs := FMaxIter; // conta o número de épocas
+  FEpochsCovered := 0;
   FCost := 0;
   LNumberOfInputs := FMlp.GetInputLayer.NeuronsCount;
   LNumberOfOutputs := FMlp.GetOutputLayer.NeuronsCount;
   { Faz para o número de ciclos }
-  for LCicle := 0 to FMaxIter - 1 do
+  for LCicle := 0 to FEpochs - 1 do
   begin
     { O numero de entradas pelos períodos, deslocando-se uma amostra à frente a cada treinamento }
     for LIndex := 0 to FInputData.Count - 1 do
     begin
-      LInputIndex := 0;
+      LDataIndex := 0;
       { informa as entradas }
-      while LInputIndex <= (LNumberOfInputs - 1) do
+      while LDataIndex <= (LNumberOfInputs - 1) do
       begin
         { passa o valor para a rede }
-        FMlp.SetInputValue(LInputIndex, TDoubleArray(FInputData.Get(LIndex))[LInputIndex]);
-        Inc(LInputIndex);
+        FMlp.SetInputValue(LDataIndex, TDoubleArray(FInputData.Get(LIndex))[LDataIndex]);
+        Inc(LDataIndex);
       end;
-      LInputIndex := 0;
-      { informa as entradas }
-      while LInputIndex <= (LNumberOfOutputs - 1) do
+      LDataIndex := 0;
+      { informa as saídas }
+      while LDataIndex <= (LNumberOfOutputs - 1) do
       begin
         { passa o valor para a rede }
-        FMlp.SetOutputValue(LInputIndex, TDoubleArray(FOutputData.Get(LIndex))[LInputIndex]);
-        Inc(LInputIndex);
+        FMlp.SetOutputValue(LDataIndex, TDoubleArray(FOutputData.Get(LIndex))[LDataIndex]);
+        Inc(LDataIndex);
       end;
       { executa o treino }
       FMlp.Training;
-      Inc(FEpoch);
     end;
+    Inc(FEpochsCovered);
     FCost := FMlp.Cost;
   end;
 
