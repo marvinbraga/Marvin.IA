@@ -137,7 +137,7 @@ begin
       { faz o split dos dados para treino e teste }
       TTestSplitter.New(LIrisInputData, LIrisOutputData, 0.3).ExecuteSplit(LTreinInputData, LTreinOutputData, LTestInputData, LTestOutputData);
       { cria o classificardor }
-      LMlp := TMLPClassifier.New(TSigmoidActivation.New, 2, [8, 8], 0.9, 0.9, 5000);
+      LMlp := TMLPClassifier.New(TSigmoidActivation.New, [8, 8], 0.9, 0.9, 5000);
       LFitCost := LMlp.Fit(LTreinInputData, LTreinOutputData).Cost;
       LPredictCost := LMlp.Predict(LTestInputData, LPredictedOutputData).Cost;
 
