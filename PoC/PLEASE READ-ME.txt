@@ -1,0 +1,14 @@
+Please read me!
+
+Go to the Delphi> Tools> Options menu.
+Select Environment Variables.
+Add the following variables in User System Overrides.
+
+1) Variable = WA; Value = "your desktop path";
+
+2) Variable = MARVIN_IA_LIB; Value = $(WA)\Marvin.IA-master\Library\Delphi10Rio (For the Delphi 10 Rio version).
+or
+2) Variable = MARVIN_IA_LIB; Value = $(WA)\Marvin.IA-master\Library\Delphi10Tokyo (For the Delphi 10 Tokyo version).
+
+Thank you!
+Stay with God.
