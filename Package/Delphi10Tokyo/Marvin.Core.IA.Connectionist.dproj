@@ -66,7 +66,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DCC_DcuOutput>..\Dcus\$(Platform)\$(Config)</DCC_DcuOutput>
+        <DCC_DcuOutput>..\..\Library\Delphi10Tokyo\Dcus\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
         <DCC_N>false</DCC_N>
@@ -78,11 +78,15 @@
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
         <DCC_CBuilderOutput>All</DCC_CBuilderOutput>
         <SanitizedProjectName>Marvin_Core_IA_Connectionist</SanitizedProjectName>
-        <DCC_DcpOutput>..\Dcus\$(Platform)\$(Config)</DCC_DcpOutput>
-        <DCC_BplOutput>..\Bin\$(Platform)\$(Config)</DCC_BplOutput>
-        <DCC_UnitSearchPath>..\Bin\$(Platform)\$(Config);..\Dcus\$(Platform)\$(Config);..\Source\MachineLearning;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_DcpOutput>..\..\Library\Delphi10Tokyo\Dcus\$(Platform)\$(Config)</DCC_DcpOutput>
+        <DCC_BplOutput>..\..\Library\Delphi10Tokyo\Bin\$(Platform)\$(Config)</DCC_BplOutput>
+        <DCC_UnitSearchPath>..\..\Library\Delphi10Tokyo\Bin\$(Platform)\$(Config);..\..\Library\Delphi10Tokyo\Dcus\$(Platform)\$(Config);..\..\Source\MachineLearning;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_Locale>1046</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <DCC_Description>Marvin AI Core Connectionist Classes</DCC_Description>
+        <RuntimeOnlyPackage>true</RuntimeOnlyPackage>
+        <DCC_OutputNeverBuildDcps>true</DCC_OutputNeverBuildDcps>
+        <DllSuffix>.Delphi10Tokyo</DllSuffix>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
@@ -142,39 +146,39 @@
         </DelphiCompile>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="Marvin.Core.dcp"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.ActivateFunction.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Activation.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Cost.Default.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Cost.Factory.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Cost.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Exceptions.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Layer.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Layer.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Layers.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Layers.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.LayerType.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.MultiLayerPerceptron.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.MultiLayerPerceptron.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Neuron.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Neuron.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Neurons.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Neurons.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Support.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Support.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Synapse.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Synapse.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Synapses.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Synapses.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.ValueConvertion.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.ValueConvertion.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.MLPClassifier.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Classifier.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.TestSplitter.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.TestSplitter.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Metric.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Metric.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Perceptron.Clss.pas"/>
-        <DCCReference Include="..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Perceptron.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.ActivateFunction.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Activation.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Cost.Default.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Cost.Factory.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Cost.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Exceptions.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Layer.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Layer.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Layers.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Layers.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.LayerType.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.MultiLayerPerceptron.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.MultiLayerPerceptron.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Neuron.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Neuron.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Neurons.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Neurons.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Support.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Support.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Synapse.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Synapse.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Synapses.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Synapses.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.ValueConvertion.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.ValueConvertion.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.MLPClassifier.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Classifier.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.TestSplitter.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.TestSplitter.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Metric.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Metric.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Perceptron.Clss.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Perceptron.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -201,8 +205,8 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="..\Bin\Win32\Debug\Marvin.Core.IA.Connectionist.bpl" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
+                <DeployFile LocalName="..\Bin\Win64\Debug\Marvin.Core.IA.Connectionist.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
                         <RemoteName>Marvin_Core_IA_Connectionist.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -227,8 +231,8 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Bin\Win64\Debug\Marvin_Core_IA_Connectionist.bpl" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win64">
+                <DeployFile LocalName="..\Bin\Win32\Debug\Marvin_Core_IA_Connectionist.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
                         <RemoteName>Marvin_Core_IA_Connectionist.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>

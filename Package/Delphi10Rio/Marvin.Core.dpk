@@ -25,7 +25,10 @@ package Marvin.Core;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$IMPLICITBUILD ON}
+{$DESCRIPTION 'Marvin Core Classes'}
+{$LIBSUFFIX '.Delphi10Rio'}
+{$RUNONLY}
+{$IMPLICITBUILD OFF}
 
 requires
   rtl;

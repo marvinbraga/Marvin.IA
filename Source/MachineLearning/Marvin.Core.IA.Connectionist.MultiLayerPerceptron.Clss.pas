@@ -126,7 +126,7 @@ type
     function Build: IMultiLayerPerceptron;
     { executa uma época de treinamento da rede }
     function Training: IMultiLayerPerceptron;
-    function TrainingPruning(const AEpocs: Longint): Longint;
+    function TrainingPruning(const AEpochs: Longint): Longint;
     { Valores para teste de valores de entrada }
     function Test: IMultiLayerPerceptron;
     { retorna a função custo, ou seja, o erro atual }
@@ -698,14 +698,14 @@ begin
     .CorrectWeight;
 end;
 
-function TMultiLayerPerceptron.TrainingPruning(const AEpocs: Longint): Longint;
+function TMultiLayerPerceptron.TrainingPruning(const AEpochs: Longint): Longint;
 begin
   { Presume que os valores de entrada já estejam colocados, junto com os alvos.
     Executa o processo somente uma vez. }
   Result := TMultiLayerPerceptron(Self
     .FeedForward
     .BackPropagation
-    .SetGama(Self.Gama + (0.1 / AEpocs)))
+    .SetGama(Self.Gama + (0.1 / AEpochs)))
     .CorrectWeightPruning
     { conta quantas sinapses foram zeradas pelo processo }
     .NullWeightsCount;
@@ -734,7 +734,10 @@ function TMultiLayerPerceptron.SetOutput(const ANeuron: INeuron; const AValue, A
 begin
   Result := Self;
   { passa o valor máximo com a entrada já transformada }
-  Self.SetNeuronMinValue(ANeuron, AMinValue).SetNeuronMaxValue(ANeuron, AMaxValue).SetOutputValue(ANeuron, AValue);
+  Self
+    .SetNeuronMinValue(ANeuron, AMinValue)
+    .SetNeuronMaxValue(ANeuron, AMaxValue)
+    .SetOutputValue(ANeuron, AValue);
 end;
 
 function TMultiLayerPerceptron.SetOutputMaxValue(const ANeuronIndex: Integer; const AMaxValue: Double): IMultiLayerPerceptron;
@@ -745,7 +748,11 @@ end;
 function TMultiLayerPerceptron.SetOutputMinMaxValues(const ANeuronIndex: Integer; const AMinValue, AMaxValue: Double): IMultiLayerPerceptron;
 begin
   Result := Self;
-  Self.GetOutputLayer.Neurons.Get(ANeuronIndex).SetMinValue(AMinValue).SetMaxValue(AMaxValue);
+  Self
+    .GetOutputLayer
+    .Neurons.Get(ANeuronIndex)
+    .SetMinValue(AMinValue)
+    .SetMaxValue(AMaxValue);
 end;
 
 function TMultiLayerPerceptron.SetOutputMinValue(const ANeuronIndex: Integer; const AMinValue: Double): IMultiLayerPerceptron;

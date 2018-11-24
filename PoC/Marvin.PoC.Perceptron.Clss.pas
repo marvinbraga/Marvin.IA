@@ -23,6 +23,7 @@ type
 implementation
 
 uses
+  System.SysUtils,
   Marvin.Core.InterfacedList,
   Marvin.Core.IA.Connectionist.Classifier,
   Marvin.Core.IA.Connectionist.Activation,
@@ -39,7 +40,6 @@ function TPocPerceptron.Execute: IPocPerceptron;
 var
   LInputTrein, LOutputTrein: IList<TDoubleArray>;
   LInputTest, LOutputTest: IList<TDoubleArray>;
-  LPerceptron: IPerceptron;
 begin
   { cria as listas de dados }
   LInputTrein := TCustomList<TDoubleArray>.Create;
@@ -65,11 +65,18 @@ begin
 
   LInputTest.Add([0.46, 0.80]);
 
-  LPerceptron := TPerceptron.New(TSignalActivation.New, -1);
-  LPerceptron.Fit(LInputTrein, LOutputTrein);
-  LPerceptron.Predict(LInputTest, LOutputTest);
+  with TPerceptron.New(TSignalActivation.New, -1) do
+  begin
+    Fit(LInputTrein, LOutputTrein);
+    Predict(LInputTest, LOutputTest);
 
-  Writeln(LOutputTest.First.ToString);
+    Writeln('Result .........: ' + LOutputTest.First.ToString);
+    Writeln('Learning Rate ..: ' + LearningRate.ToString);
+    Writeln('Epochs ...... ..: ' + Epochs.ToString);
+    Writeln('Epochs Covered .: ' + EpochsCovered.ToString);
+    Writeln('Bias ...........: ' + Bias.ToString);
+    Writeln('Weights ........: ' + Weights.ToString);
+  end;
   readln;
 end;
 

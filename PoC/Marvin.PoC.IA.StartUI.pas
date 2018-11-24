@@ -62,7 +62,7 @@ type
     function ShowTreinData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
     function ShowTestData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
     function ShowPredictedData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>; const AFitCost: Double; const APredictCost: Double): TFormStart;
-    function ShowResume(const ATestOutputData: IList<TDoubleArray>; const APredictedData: IList<TDoubleArray>): TFormStart;
+    function ShowResume(const AMlp: IClassifier; const ATestOutputData: IList<TDoubleArray>; const APredictedData: IList<TDoubleArray>): TFormStart;
   public
   end;
 
@@ -76,6 +76,7 @@ uses
   Marvin.PoC.IA.DataConverter,
   Marvin.Core.IA.Connectionist.Metric,
   Marvin.PoC.IA.DataConverter.Clss,
+  Marvin.Core.IA.Connectionist.ActivateFunction.Clss,
   Marvin.Core.IA.Connectionist.MLPClassifier.Clss,
   Marvin.Core.IA.Connectionist.TestSplitter.Clss,
   Marvin.Core.IA.Connectionist.Metric.Clss;
@@ -136,7 +137,7 @@ begin
       { faz o split dos dados para treino e teste }
       TTestSplitter.New(LIrisInputData, LIrisOutputData, 0.3).ExecuteSplit(LTreinInputData, LTreinOutputData, LTestInputData, LTestOutputData);
       { cria o classificardor }
-      LMlp := TMLPClassifier.New;
+      LMlp := TMLPClassifier.New(TSigmoidActivation.New, [8, 8], 0.9, 0.9, 5000);
       LFitCost := LMlp.Fit(LTreinInputData, LTreinOutputData).Cost;
       LPredictCost := LMlp.Predict(LTestInputData, LPredictedOutputData).Cost;
 
@@ -154,7 +155,7 @@ begin
           { exibe os dados da classificação }
           .ShowPredictedData(LTestInputData, LPredictedOutputData, LFitCost, LPredictCost)
           { exibe o resumo }
-          .ShowResume(LTestOutputData, LPredictedOutputData)
+          .ShowResume(LMlp, LTestOutputData, LPredictedOutputData)
         ;
       finally
         MemoData.Lines.EndUpdate;
@@ -211,7 +212,7 @@ begin
   MemoData.Lines.Add(Format('PREDICT COST .: (%2.8f)', [APredictCost]));
 end;
 
-function TFormStart.ShowResume(const ATestOutputData: IList<TDoubleArray>; const APredictedData: IList<TDoubleArray>): TFormStart;
+function TFormStart.ShowResume(const AMlp: IClassifier; const ATestOutputData: IList<TDoubleArray>; const APredictedData: IList<TDoubleArray>): TFormStart;
 const
   LC_CORRECT: string = 'Correct';
   LC_INCORRECT: string = '<-- INCORRECT';
@@ -243,7 +244,9 @@ begin
 
   LAccuracy := TAccuracy.New.Calculate(ATestOutputData, APredictedData);
   MemoData.Lines.Add('');
-  MemoData.Lines.Add(Format('Accuracy: Count = %d, Value = %2.8f', [LAccuracy.Count, LAccuracy.Value]));
+  MemoData.Lines.Add(Format('Accuracy .....: Count = %d, Value = %2.8f', [LAccuracy.Count, LAccuracy.Value]));
+  MemoData.Lines.Add(Format('Epochs .......: %d', [AMlp.Epochs]));
+  MemoData.Lines.Add(Format('Epochs Covered: %d', [AMlp.EpochsCovered]));
 end;
 
 function TFormStart.ShowConvertedData(const AInputData, AOutputData: IList<TDoubleArray>): TFormStart;
