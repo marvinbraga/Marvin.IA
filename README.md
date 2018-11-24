@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/marvinbraga/Marvin.IA/edit/master/READ_ME.md)
 [![Author](https://img.shields.io/badge/author-Marcus%20Vinicius%20Braga-blue.svg)](https://www.linkedin.com/in/marcus-vinicius-braga-0669444/)
-[![Compatibility](https://img.shields.io/badge/compatibility-Delphi%20Tokyo%20-red.svg)](https://www.embarcadero.com/products/delphi)
+[![Compatibility](https://img.shields.io/badge/compatibility-Delphi%2010.3%20Rio%20-red.svg)](https://www.embarcadero.com/products/delphi)
 
 Marvin.IA is a machine learning collection of object-oriented Pascal primitives (only interfaces and classes). 
 
