@@ -108,12 +108,17 @@ var
   LPredictCost, LFitCost: Double;
   LFileName: string;
   LExecute: Boolean;
+  LFileType: TFileTypeItem;
 begin
   Result := Self;
   {$WARNINGS OFF}
   with TFileOpenDialog.Create(nil) do
   begin
     try
+      LFileType := FileTypes.Add;
+      LFileType.FileMask := '*.csv';
+      LFileType := FileTypes.Add;
+      LFileType.FileMask := '*.*';
       LExecute := Execute;
       if LExecute then
       begin
