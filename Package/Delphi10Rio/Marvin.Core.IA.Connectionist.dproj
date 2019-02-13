@@ -80,7 +80,7 @@
         <SanitizedProjectName>Marvin_Core_IA_Connectionist</SanitizedProjectName>
         <DCC_DcpOutput>..\..\Library\Delphi10Rio\Dcus\$(Platform)\$(Config)</DCC_DcpOutput>
         <DCC_BplOutput>..\..\Library\Delphi10Rio\Bin\$(Platform)\$(Config)</DCC_BplOutput>
-        <DCC_UnitSearchPath>..\..\Library\Delphi10Rio\Bin\$(Platform)\$(Config);..\..\Library\Delphi10Rio\Dcus\$(Platform)\$(Config);..\..\Source\MachineLearning;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\..\Library\Delphi10Rio\Bin\$(Platform)\$(Config);..\..\Library\Delphi10Rio\Dcus\$(Platform)\$(Config);..\..\Source\MachineLearning;..\..\Source\Core;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_Locale>1046</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_Description>Marvin AI Core Connectionist Classes</DCC_Description>
@@ -211,14 +211,14 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\..\Library\Delphi10Tokyo\Bin\Win64\Debug\Marvin.Core.IA.Connectionist.Delphi10Tokyo.bpl" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win64">
+                <DeployFile LocalName="..\Bin\Win32\Debug\Marvin_Core_IA_Connectionist.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
                         <RemoteName>Marvin_Core_IA_Connectionist.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\Bin\Win32\Debug\Marvin_Core_IA_Connectionist.bpl" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
+                <DeployFile LocalName="..\..\Library\Delphi10Tokyo\Bin\Win64\Debug\Marvin.Core.IA.Connectionist.Delphi10Tokyo.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
                         <RemoteName>Marvin_Core_IA_Connectionist.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>

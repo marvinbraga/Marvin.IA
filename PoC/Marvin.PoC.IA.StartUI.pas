@@ -3,7 +3,7 @@ unit Marvin.PoC.IA.StartUI;
 {
   MIT License
 
-  Copyright (c) 2018 Marcus Vinicius D. B. Braga
+  Copyright (c) 2019 Marcus Vinicius D. B. Braga
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,8 @@ uses
   Vcl.Dialogs,
   Vcl.StdCtrls,
   Vcl.ExtCtrls,
-  Vcl.ComCtrls;
+  Vcl.ComCtrls, VclTee.TeeGDIPlus, VCLTee.TeEngine, VCLTee.Series,
+  VCLTee.TeeProcs, VCLTee.Chart, Vcl.WinXCtrls;
 
 type
   TFormStart = class(TForm)
@@ -53,16 +54,33 @@ type
     TabTrain: TTabSheet;
     TabTest: TTabSheet;
     MemoData: TMemo;
+    LabelCabecalhoTreino: TLabel;
+    MemoTrain: TMemo;
+    MemoPredict: TMemo;
+    LabelCabecalhoTeste: TLabel;
+    Label1: TLabel;
+    PageControlData: TPageControl;
+    TabSheetCollectionData: TTabSheet;
+    TabSheetGraphicsData: TTabSheet;
+    PanelGraphicsData: TPanel;
+    ChartPureData: TChart;
+    Series1: TPointSeries;
+    Series2: TPointSeries;
+    Series3: TPointSeries;
+    ActivityIndicator: TActivityIndicator;
     procedure ButtonLoadFileClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
     function GetIrisData: TFormStart;
-    function ShowData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
+    function ShowData(const AMemo: TMemo; const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
     function ShowOriginalData(const AText: string): TFormStart;
     function ShowConvertedData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
     function ShowTreinData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
     function ShowTestData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
     function ShowPredictedData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>; const AFitCost: Double; const APredictCost: Double): TFormStart;
     function ShowResume(const AMlp: IClassifier; const ATestOutputData: IList<TDoubleArray>; const APredictedData: IList<TDoubleArray>): TFormStart;
+    procedure ExecutePredict(const AFileName: string);
   public
   end;
 
@@ -72,6 +90,7 @@ var
 implementation
 
 uses
+  System.Threading,
   { marvin }
   Marvin.PoC.IA.DataConverter,
   Marvin.Core.IA.Connectionist.Metric,
@@ -84,33 +103,18 @@ uses
 {$R *.dfm}
 
 procedure TFormStart.ButtonLoadFileClick(Sender: TObject);
-var
-  LCursor: TCursor;
 begin
-  LCursor := Screen.Cursor;
-  Screen.Cursor := crHourGlass;
-  try
-    Application.ProcessMessages;
-    Self.GetIrisData;
-  finally
-    Screen.Cursor := LCursor;
-  end;
+  Self.GetIrisData;
 end;
 
 function TFormStart.GetIrisData: TFormStart;
 var
-  LStream: TStringStream;
-  LIrisInputData, LIrisOutputData: IList<TDoubleArray>;
-  LTreinInputData, LTreinOutputData: IList<TDoubleArray>;
-  LTestInputData, LTestOutputData: IList<TDoubleArray>;
-  LPredictedOutputData: IList<TDoubleArray>;
-  LMlp: IClassifier;
-  LPredictCost, LFitCost: Double;
-  LFileName: string;
-  LExecute: Boolean;
   LFileType: TFileTypeItem;
 begin
   Result := Self;
+  MemoData.Lines.Clear;
+  MemoTrain.Lines.Clear;
+
   {$WARNINGS OFF}
   with TFileOpenDialog.Create(nil) do
   begin
@@ -119,59 +123,18 @@ begin
       LFileType.FileMask := '*.csv';
       LFileType := FileTypes.Add;
       LFileType.FileMask := '*.*';
-      LExecute := Execute;
-      if LExecute then
+      if Execute then
       begin
-        LFileName := FileName;
+        Self.ExecutePredict(FileName);
       end;
     finally
       Free;
     end;
   end;
   {$WARNINGS ON}
-
-  if LExecute then
-  begin
-    LStream := TStringStream.Create('', TEncoding.UTF8);
-    try
-      { load pure data file }
-      LStream.LoadFromFile(LFileName);
-
-      { transforma os dados originais para o formato compatível e ajustado }
-      TIrisDataConverter.New(LStream.DataString).Execute(LIrisInputData, LIrisOutputData);
-      { faz o split dos dados para treino e teste }
-      TTestSplitter.New(LIrisInputData, LIrisOutputData, 0.3).ExecuteSplit(LTreinInputData, LTreinOutputData, LTestInputData, LTestOutputData);
-      { cria o classificardor }
-      LMlp := TMLPClassifier.New(TSigmoidActivation.New, [8, 8], 0.9, 0.9, 5000);
-      LFitCost := LMlp.Fit(LTreinInputData, LTreinOutputData).Cost;
-      LPredictCost := LMlp.Predict(LTestInputData, LPredictedOutputData).Cost;
-
-      MemoData.Lines.BeginUpdate;
-      try
-        Self
-          { exibe os dados originais }
-          .ShowOriginalData(LStream.DataString)
-          { exibe os dados convertidos }
-          .ShowConvertedData(LIrisInputData, LIrisOutputData)
-          { exibe os dados de treino }
-          .ShowTreinData(LTreinInputData, LTreinOutputData)
-          { exibe os dados de teste }
-          .ShowTestData(LTestInputData, LTestOutputData)
-          { exibe os dados da classificação }
-          .ShowPredictedData(LTestInputData, LPredictedOutputData, LFitCost, LPredictCost)
-          { exibe o resumo }
-          .ShowResume(LMlp, LTestOutputData, LPredictedOutputData)
-        ;
-      finally
-        MemoData.Lines.EndUpdate;
-      end;
-    finally
-      LStream.Free;
-    end;
-  end;
 end;
 
-function TFormStart.ShowData(const AInputData, AOutputData: IList<TDoubleArray>): TFormStart;
+function TFormStart.ShowData(const AMemo: TMemo; const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
 var
   LInput, LOutput: TDoubleArray;
 begin
@@ -185,7 +148,7 @@ begin
     { converte o resultado as saídas para 0 ou 1 }
     LOutput.ToBinaryValue;
     { exibe }
-    MemoData.Lines.Add(Format('Inputs: [%3.8f, %3.8f, %3.8f, %3.8f]; Outputs: [%3.8f, %3.8f, %3.8f]', [
+    AMemo.Lines.Add(Format('Inputs: [%3.8f, %3.8f, %3.8f, %3.8f]; Outputs: [%3.8f, %3.8f, %3.8f]', [
       LInput[0],  LInput[1],  LInput[2], LInput[3],
       LOutput[0], LOutput[1], LOutput[2]
     ]));
@@ -198,7 +161,7 @@ end;
 function TFormStart.ShowOriginalData(const AText: string): TFormStart;
 begin
   Result := Self;
-  MemoData.Lines.Text := AText;
+  MemoData.Lines.Text := AText.Trim;
   MemoData.Lines.Insert(0, Format('IRIS ORIGINAL DATA: (%d)', [MemoData.Lines.Count]));
   MemoData.Lines.Insert(1, '------------------');
   MemoData.Lines.Insert(2, '');
@@ -207,14 +170,14 @@ end;
 function TFormStart.ShowPredictedData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>; const AFitCost: Double; const APredictCost: Double): TFormStart;
 begin
   Result := Self;
-  MemoData.Lines.Add('');
-  MemoData.Lines.Add(Format('IRIS PREDICTED DATA: (%d)', [AInputData.Count]));
-  MemoData.Lines.Add('-------------------');
-  MemoData.Lines.Add('');
-  Self.ShowData(AInputData, AOutputData);
-  MemoData.Lines.Add('');
-  MemoData.Lines.Add(Format('FIT COST .....: (%2.8f)', [AFitCost]));
-  MemoData.Lines.Add(Format('PREDICT COST .: (%2.8f)', [APredictCost]));
+  MemoPredict.Lines.Add('');
+  MemoPredict.Lines.Add(Format('IRIS PREDICTED DATA: (%d)', [AInputData.Count]));
+  MemoPredict.Lines.Add('-------------------');
+  MemoPredict.Lines.Add('');
+  Self.ShowData(MemoPredict, AInputData, AOutputData);
+  MemoPredict.Lines.Add('');
+  MemoPredict.Lines.Add(Format('FIT COST .....: (%2.8f)', [AFitCost]));
+  MemoPredict.Lines.Add(Format('PREDICT COST .: (%2.8f)', [APredictCost]));
 end;
 
 function TFormStart.ShowResume(const AMlp: IClassifier; const ATestOutputData: IList<TDoubleArray>; const APredictedData: IList<TDoubleArray>): TFormStart;
@@ -227,10 +190,10 @@ var
   LAccuracy: IMetric;
 begin
   Result := Self;
-  MemoData.Lines.Add('');
-  MemoData.Lines.Add(Format('RESUME: (%d)', [ATestOutputData.Count]));
-  MemoData.Lines.Add('------');
-  MemoData.Lines.Add('');
+  MemoPredict.Lines.Add('');
+  MemoPredict.Lines.Add(Format('RESUME: (%d)', [ATestOutputData.Count]));
+  MemoPredict.Lines.Add('------');
+  MemoPredict.Lines.Add('');
 
   LTestData := ATestOutputData.First;
   LPredictedData := APredictedData.First;
@@ -241,17 +204,107 @@ begin
     begin
       LResult := LC_CORRECT;
     end;
-    MemoData.Lines.Add(Format('%d: %s, %s (%s)', [ATestOutputData.Position + 1, LTestData.ToString, LPredictedData.ToString, LResult]));
+    MemoPredict.Lines.Add(Format('%d: %s, %s (%s)', [ATestOutputData.Position + 1, LTestData.ToString, LPredictedData.ToString, LResult]));
     { recupera o próximo dado }
     LTestData := ATestOutputData.MoveNext;
     LPredictedData := APredictedData.MoveNext;
   end;
 
   LAccuracy := TAccuracy.New.Calculate(ATestOutputData, APredictedData);
-  MemoData.Lines.Add('');
-  MemoData.Lines.Add(Format('Accuracy .....: Count = %d, Value = %2.8f', [LAccuracy.Count, LAccuracy.Value]));
-  MemoData.Lines.Add(Format('Epochs .......: %d', [AMlp.Epochs]));
-  MemoData.Lines.Add(Format('Epochs Covered: %d', [AMlp.EpochsCovered]));
+  MemoPredict.Lines.Add('');
+  MemoPredict.Lines.Add(Format('Accuracy .....: Count = %d, Value = %2.8f', [LAccuracy.Count, LAccuracy.Value]));
+  MemoPredict.Lines.Add(Format('Epochs .......: %d', [AMlp.Epochs]));
+  MemoPredict.Lines.Add(Format('Epochs Covered: %d', [AMlp.EpochsCovered]));
+end;
+
+procedure TFormStart.ExecutePredict(const AFileName: string);
+var
+  LFileName: string;
+begin
+  LFileName := AFileName;
+
+  TTask.Run(
+  procedure
+  var
+    LStream: TStringStream;
+    LIrisInputData, LIrisOutputData: IList<TDoubleArray>;
+    LTreinInputData, LTreinOutputData: IList<TDoubleArray>;
+    LTestInputData, LTestOutputData: IList<TDoubleArray>;
+    LPredictedOutputData: IList<TDoubleArray>;
+    LMlp: IClassifier;
+    LPredictCost, LFitCost: Double;
+    LCursor: TCursor;
+  begin
+    TThread.Queue(TThread.CurrentThread,
+    procedure
+    begin
+      ActivityIndicator.BringToFront;
+      ActivityIndicator.Animate := True;
+      LCursor := Screen.Cursor;
+      Screen.Cursor := crHourGlass;
+    end);
+    try
+      LStream := TStringStream.Create('', TEncoding.UTF8);
+      try
+        { load pure data file }
+        LStream.LoadFromFile(LFileName);
+
+        { transforma os dados originais para o formato compatível e ajustado }
+        TIrisDataConverter.New(LStream.DataString).Execute(LIrisInputData, LIrisOutputData);
+        { faz o split dos dados para treino e teste }
+        TTestSplitter.New(LIrisInputData, LIrisOutputData, 0.3).ExecuteSplit(LTreinInputData, LTreinOutputData, LTestInputData, LTestOutputData);
+        { cria o classificardor }
+        LMlp := TMLPClassifier.New(TSigmoidActivation.New, [8, 8], 0.9, 0.9, 5000);
+        LFitCost := LMlp.Fit(LTreinInputData, LTreinOutputData).Cost;
+        LPredictCost := LMlp.Predict(LTestInputData, LPredictedOutputData).Cost;
+
+        TThread.Queue(TThread.CurrentThread,
+        procedure
+        begin
+          MemoData.Lines.BeginUpdate;
+          try
+            Self
+              { exibe os dados originais }
+              .ShowOriginalData(LStream.DataString)
+              { exibe os dados convertidos }
+              .ShowConvertedData(LIrisInputData, LIrisOutputData)
+              { exibe os dados de treino }
+              .ShowTreinData(LTreinInputData, LTreinOutputData)
+              { exibe os dados de teste }
+              .ShowTestData(LTestInputData, LTestOutputData)
+              { exibe os dados da classificação }
+              .ShowPredictedData(LTestInputData, LPredictedOutputData, LFitCost, LPredictCost)
+              { exibe o resumo }
+              .ShowResume(LMlp, LTestOutputData, LPredictedOutputData)
+            ;
+          finally
+            MemoData.Lines.EndUpdate;
+          end;
+        end);
+      finally
+        LStream.Free;
+      end;
+    finally
+      TThread.Queue(TThread.CurrentThread,
+      procedure
+      begin
+        Screen.Cursor := LCursor;
+        ActivityIndicator.Animate := False;
+        ActivityIndicator.SendToBack;
+      end);
+    end;
+  end);
+end;
+
+procedure TFormStart.FormCreate(Sender: TObject);
+begin
+  ActivityIndicator.SendToBack;
+end;
+
+procedure TFormStart.FormResize(Sender: TObject);
+begin
+  ActivityIndicator.Top := (FormStart.Height - ActivityIndicator.Height) div 2;
+  ActivityIndicator.Left := (FormStart.Width - ActivityIndicator.Width) div 2;
 end;
 
 function TFormStart.ShowConvertedData(const AInputData, AOutputData: IList<TDoubleArray>): TFormStart;
@@ -261,27 +314,27 @@ begin
   MemoData.Lines.Add(Format('IRIS CONVERTED DATA: (%d)', [AInputData.Count]));
   MemoData.Lines.Add('-------------------');
   MemoData.Lines.Add('');
-  Self.ShowData(AInputData, AOutputData);
+  Self.ShowData(MemoData, AInputData, AOutputData);
 end;
 
 function TFormStart.ShowTestData(const AInputData, AOutputData: IList<TDoubleArray>): TFormStart;
 begin
   Result := Self;
-  MemoData.Lines.Add('');
-  MemoData.Lines.Add(Format('IRIS TEST DATA: (%d)', [AInputData.Count]));
-  MemoData.Lines.Add('--------------');
-  MemoData.Lines.Add('');
-  Self.ShowData(AInputData, AOutputData);
+  MemoPredict.Lines.Add('');
+  MemoPredict.Lines.Add(Format('IRIS TEST DATA: (%d)', [AInputData.Count]));
+  MemoPredict.Lines.Add('--------------');
+  MemoPredict.Lines.Add('');
+  Self.ShowData(MemoPredict, AInputData, AOutputData);
 end;
 
 function TFormStart.ShowTreinData(const AInputData, AOutputData: IList<TDoubleArray>): TFormStart;
 begin
   Result := Self;
-  MemoData.Lines.Add('');
-  MemoData.Lines.Add(Format('IRIS TREIN DATA: (%d)', [AInputData.Count]));
-  MemoData.Lines.Add('---------------');
-  MemoData.Lines.Add('');
-  Self.ShowData(AInputData, AOutputData);
+  MemoTrain.Lines.Add('');
+  MemoTrain.Lines.Add(Format('IRIS TREIN DATA: (%d)', [AInputData.Count]));
+  MemoTrain.Lines.Add('---------------');
+  MemoTrain.Lines.Add('');
+  Self.ShowData(MemoTrain, AInputData, AOutputData);
 end;
 
 end.

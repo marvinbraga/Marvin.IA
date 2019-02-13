@@ -34,6 +34,6 @@ requires
   rtl;
 
 contains
-  Marvin.Core.InterfacedList in '..\Source\Core\Marvin.Core.InterfacedList.pas';
+  Marvin.Core.InterfacedList in '..\..\Source\Core\Marvin.Core.InterfacedList.pas';
 
 end.

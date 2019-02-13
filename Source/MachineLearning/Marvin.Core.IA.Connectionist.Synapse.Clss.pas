@@ -3,7 +3,7 @@ unit Marvin.Core.IA.Connectionist.Synapse.Clss;
 {
   MIT License
 
-  Copyright (c) 2018 Marcus Vinicius D. B. Braga
+  Copyright (c) 2019 Marcus Vinicius D. B. Braga
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
