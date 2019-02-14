@@ -11,7 +11,9 @@ object FormStart: TFormStart
   Font.Name = 'Roboto'
   Font.Style = []
   OldCreateOrder = False
+  PopupMenu = PopupMenu
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
@@ -263,5 +265,12 @@ object FormStart: TFormStart
     Top = 304
     IndicatorSize = aisLarge
     IndicatorType = aitSectorRing
+  end
+  object PopupMenu: TPopupMenu
+    Left = 880
+    Top = 112
+    object ItemStyles: TMenuItem
+      Caption = 'Styles'
+    end
   end
 end

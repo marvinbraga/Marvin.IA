@@ -30,6 +30,7 @@ uses
   { marvin }
   Marvin.Core.InterfacedList,
   Marvin.Core.IA.Connectionist.Classifier,
+  Marvin.Utils.VCL.StyleManager,
   { embarcadero }
   Winapi.Windows,
   Winapi.Messages,
@@ -43,7 +44,7 @@ uses
   Vcl.StdCtrls,
   Vcl.ExtCtrls,
   Vcl.ComCtrls, VclTee.TeeGDIPlus, VCLTee.TeEngine, VCLTee.Series,
-  VCLTee.TeeProcs, VCLTee.Chart, Vcl.WinXCtrls;
+  VCLTee.TeeProcs, VCLTee.Chart, Vcl.WinXCtrls, Vcl.Menus;
 
 type
   TFormStart = class(TForm)
@@ -68,9 +69,14 @@ type
     Series2: TPointSeries;
     Series3: TPointSeries;
     ActivityIndicator: TActivityIndicator;
+    PopupMenu: TPopupMenu;
+    ItemStyles: TMenuItem;
     procedure ButtonLoadFileClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+  private
+    FStylesManager: IVclStyleManager;
   private
     function GetIrisData: TFormStart;
     function ShowData(const AMemo: TMemo; const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
@@ -299,6 +305,12 @@ end;
 procedure TFormStart.FormCreate(Sender: TObject);
 begin
   ActivityIndicator.SendToBack;
+  FStylesManager := TFactoryVCLStyleManager.New(ItemStyles);
+end;
+
+procedure TFormStart.FormDestroy(Sender: TObject);
+begin
+  FStylesManager := nil;
 end;
 
 procedure TFormStart.FormResize(Sender: TObject);
