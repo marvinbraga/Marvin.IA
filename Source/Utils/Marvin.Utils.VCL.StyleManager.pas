@@ -56,12 +56,13 @@ uses
   IniFiles;
 
 resourcestring
-  RS_STYLES_MENU_ITEM = 'Estilos';
+  RS_STYLES_MENU_ITEM = 'Styles';
 
 type
   TVCLStyleManager = class(TInterfacedObject, IVclStyleManager)
   strict private
     FMenuItem: TMenuItem;
+    FCaptionMenuItem: string;
   protected
     { métodos }
     procedure LoadVCLStyles;
@@ -86,7 +87,13 @@ end;
 
 constructor TVCLStyleManager.Create(AMenuItem: TMenuItem);
 begin
+  Assert(Assigned(AMenuItem), 'The Menu Item can not be NIL.');
   FMenuItem := AMenuItem;
+  FCaptionMenuItem := FMenuItem.Caption;
+  if FCaptionMenuItem.Trim.IsEmpty then
+  begin
+    FCaptionMenuItem := RS_STYLES_MENU_ITEM;
+  end;
   { carrega os estilos }
   Self.LoadVCLStyles;
 end;
@@ -140,7 +147,7 @@ begin
     LStylesMenuItem.Caption := LStyleName;
     LStylesMenuItem.OnClick := InternalStyleMenuClick;
     FMenuItem.Add(LStylesMenuItem);
-    if (LActiveStyle = EmptyStr) then
+    if (LActiveStyle.Trim.IsEmpty) then
     begin
       if LStyleName.Contains('Windows') then
       begin
@@ -178,7 +185,7 @@ end;
 procedure TVCLStyleManager.SetMenuItemCaption(const AStyleName: string);
 begin
   { ajusta o item do menu com o nome do estilo selecionado }
-  FMenuItem.Caption := Format('[%S] ' + RS_STYLES_MENU_ITEM, [AStyleName]);
+  FMenuItem.Caption := Format('[%S] ' + FCaptionMenuItem, [AStyleName]);
 end;
 
 procedure TVCLStyleManager.StoreActiveStyle(AIniFile: string; const AActiveStyle: string);
