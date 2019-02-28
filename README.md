@@ -1,7 +1,7 @@
 # Marvin.IA
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/marvinbraga/Marvin.IA/edit/master/READ_ME.md)
-[![Author](https://img.shields.io/badge/author-Marcus%20Vinicius%20Braga-blue.svg)](https://www.linkedin.com/in/marcus-vinicius-braga-0669444/)
+[![Author](https://img.shields.io/badge/author-Marcus%20Vinicius%20Braga-blue.svg)](https://www.linkedin.com/in/marvinbraga/)
 [![Compatibility](https://img.shields.io/badge/compatibility-Delphi%2010.3%20Rio%20-red.svg)](https://www.embarcadero.com/products/delphi)
 
 Marvin.IA is a machine learning collection of object-oriented Pascal primitives (only interfaces and classes). 
@@ -55,7 +55,7 @@ If you have questions or general suggestions, don't hesitate to submit a new [Gi
 
 ## Contributors
 
-  - [@marvinbraga](https://github.com/marvinbraga) as Marcus Vinicius Braga ([YouTube](https://www.youtube.com/c/marvinbraga/)) ([LinkedIn](https://www.linkedin.com/in/marcus-vinicius-braga-0669444/))
+  - [@marvinbraga](https://github.com/marvinbraga) as Marcus Vinicius Braga ([YouTube](https://www.youtube.com/c/marvinbraga/)) ([LinkedIn](https://www.linkedin.com/in/marvinbraga/))
 
 ## License (MIT)
 
