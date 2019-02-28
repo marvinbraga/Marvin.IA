@@ -179,6 +179,7 @@
         <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Metric.pas"/>
         <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Perceptron.Clss.pas"/>
         <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Perceptron.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Cost.MSE.Clss.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -205,12 +206,6 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="..\Bin\Win64\Debug\Marvin.Core.IA.Connectionist.bpl" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win64">
-                        <RemoteName>Marvin_Core_IA_Connectionist.bpl</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
                         <Overwrite>true</Overwrite>
@@ -223,6 +218,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule">
                     <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\Bin\Win64\Debug\Marvin.Core.IA.Connectionist.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win64">
+                        <RemoteName>Marvin_Core_IA_Connectionist.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

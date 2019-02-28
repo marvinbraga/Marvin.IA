@@ -1,9 +1,9 @@
 unit Marvin.PoC.IA.StartUI;
-
+
 {
   MIT License
 
-  Copyright (c) 2019 Marcus Vinicius D. B. Braga
+  Copyright (c) 2018-2019 Marcus Vinicius D. B. Braga
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -27,24 +27,30 @@ unit Marvin.PoC.IA.StartUI;
 interface
 
 uses
-  { marvin }
+  {marvin}
   Marvin.Core.InterfacedList,
   Marvin.Core.IA.Connectionist.Classifier,
   Marvin.Utils.VCL.StyleManager,
-  { embarcadero }
+  {embarcadero}
   Winapi.Windows,
   Winapi.Messages,
   System.SysUtils,
   System.Variants,
   System.Classes,
-  Vcl.Graphics,
-  Vcl.Controls,
-  Vcl.Forms,
-  Vcl.Dialogs,
-  Vcl.StdCtrls,
-  Vcl.ExtCtrls,
-  Vcl.ComCtrls, VclTee.TeeGDIPlus, VCLTee.TeEngine, VCLTee.Series,
-  VCLTee.TeeProcs, VCLTee.Chart, Vcl.WinXCtrls, Vcl.Menus;
+  VCL.Graphics,
+  VCL.Controls,
+  VCL.Forms,
+  VCL.Dialogs,
+  VCL.StdCtrls,
+  VCL.ExtCtrls,
+  VCL.ComCtrls,
+  VclTee.TeeGDIPlus,
+  VclTee.TeEngine,
+  VclTee.Series,
+  VclTee.TeeProcs,
+  VclTee.Chart,
+  VCL.WinXCtrls,
+  VCL.Menus;
 
 type
   TFormStart = class(TForm)
@@ -97,7 +103,7 @@ implementation
 
 uses
   System.Threading,
-  { marvin }
+  {marvin}
   Marvin.PoC.IA.DataConverter,
   Marvin.Core.IA.Connectionist.Metric,
   Marvin.PoC.IA.DataConverter.Clss,
@@ -115,29 +121,39 @@ end;
 
 function TFormStart.GetIrisData: TFormStart;
 var
-  LFileType: TFileTypeItem;
+  LFileName: TFileName;
+  LExecute: Boolean;
 begin
   Result := Self;
   MemoData.Lines.Clear;
   MemoTrain.Lines.Clear;
 
-  {$WARNINGS OFF}
+{$WARNINGS OFF}
   with TFileOpenDialog.Create(nil) do
   begin
     try
-      LFileType := FileTypes.Add;
+      var LFileType := FileTypes.Add;
       LFileType.FileMask := '*.csv';
       LFileType := FileTypes.Add;
       LFileType.FileMask := '*.*';
-      if Execute then
+      LExecute := Execute;
+      if LExecute then
       begin
-        Self.ExecutePredict(FileName);
+        LFileName := FileName;
       end;
     finally
       Free;
     end;
   end;
-  {$WARNINGS ON}
+{$WARNINGS ON}
+  if LExecute then
+  begin
+    TTask.Run(
+      procedure
+      begin
+        Self.ExecutePredict(LFileName);
+      end);
+  end;
 end;
 
 function TFormStart.ShowData(const AMemo: TMemo; const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
@@ -154,10 +170,7 @@ begin
     { converte o resultado as saídas para 0 ou 1 }
     LOutput.ToBinaryValue;
     { exibe }
-    AMemo.Lines.Add(Format('Inputs: [%3.8f, %3.8f, %3.8f, %3.8f]; Outputs: [%3.8f, %3.8f, %3.8f]', [
-      LInput[0],  LInput[1],  LInput[2], LInput[3],
-      LOutput[0], LOutput[1], LOutput[2]
-    ]));
+    AMemo.Lines.Add(Format('Inputs: [%3.8f, %3.8f, %3.8f, %3.8f]; Outputs: [%3.8f, %3.8f, %3.8f]', [LInput[0], LInput[1], LInput[2], LInput[3], LOutput[0], LOutput[1], LOutput[2]]));
     { recupera os dados }
     LInput := AInputData.MoveNext;
     LOutput := AOutputData.MoveNext;
@@ -203,7 +216,7 @@ begin
 
   LTestData := ATestOutputData.First;
   LPredictedData := APredictedData.First;
-  while not(ATestOutputData.Eof) do
+  while not (ATestOutputData.Eof) do
   begin
     LResult := LC_INCORRECT;
     if SameText(LTestData.ToString, LPredictedData.ToString) then
@@ -225,23 +238,16 @@ end;
 
 procedure TFormStart.ExecutePredict(const AFileName: string);
 var
-  LFileName: string;
+  LStream: TStringStream;
+  LIrisInputData, LIrisOutputData: IList<TDoubleArray>;
+  LTreinInputData, LTreinOutputData: IList<TDoubleArray>;
+  LTestInputData, LTestOutputData: IList<TDoubleArray>;
+  LPredictedOutputData: IList<TDoubleArray>;
+  LMlp: IClassifier;
+  LPredictCost, LFitCost: Double;
+  LCursor: TCursor;
 begin
-  LFileName := AFileName;
-
-  TTask.Run(
-  procedure
-  var
-    LStream: TStringStream;
-    LIrisInputData, LIrisOutputData: IList<TDoubleArray>;
-    LTreinInputData, LTreinOutputData: IList<TDoubleArray>;
-    LTestInputData, LTestOutputData: IList<TDoubleArray>;
-    LPredictedOutputData: IList<TDoubleArray>;
-    LMlp: IClassifier;
-    LPredictCost, LFitCost: Double;
-    LCursor: TCursor;
-  begin
-    TThread.Queue(TThread.CurrentThread,
+  TThread.Queue(TThread.CurrentThread,
     procedure
     begin
       ActivityIndicator.BringToFront;
@@ -249,22 +255,21 @@ begin
       LCursor := Screen.Cursor;
       Screen.Cursor := crHourGlass;
     end);
+  try
+    LStream := TStringStream.Create('', TEncoding.UTF8);
     try
-      LStream := TStringStream.Create('', TEncoding.UTF8);
-      try
-        { load pure data file }
-        LStream.LoadFromFile(LFileName);
+      { load pure data file }
+      LStream.LoadFromFile(AFileName);
+      { transforma os dados originais para o formato compatível e ajustado }
+      TIrisDataConverter.New(LStream.DataString).Execute(LIrisInputData, LIrisOutputData);
+      { faz o split dos dados para treino e teste }
+      TTestSplitter.New(LIrisInputData, LIrisOutputData, 0.3).ExecuteSplit(LTreinInputData, LTreinOutputData, LTestInputData, LTestOutputData);
+      { cria o classificardor }
+      LMlp := TMLPClassifier.New(TSigmoidActivation.New, [8, 8], 0.9, 0.9, 5000);
+      LFitCost := LMlp.Fit(LTreinInputData, LTreinOutputData).Cost;
+      LPredictCost := LMlp.Predict(LTestInputData, LPredictedOutputData).Cost;
 
-        { transforma os dados originais para o formato compatível e ajustado }
-        TIrisDataConverter.New(LStream.DataString).Execute(LIrisInputData, LIrisOutputData);
-        { faz o split dos dados para treino e teste }
-        TTestSplitter.New(LIrisInputData, LIrisOutputData, 0.3).ExecuteSplit(LTreinInputData, LTreinOutputData, LTestInputData, LTestOutputData);
-        { cria o classificardor }
-        LMlp := TMLPClassifier.New(TSigmoidActivation.New, [8, 8], 0.9, 0.9, 5000);
-        LFitCost := LMlp.Fit(LTreinInputData, LTreinOutputData).Cost;
-        LPredictCost := LMlp.Predict(LTestInputData, LPredictedOutputData).Cost;
-
-        TThread.Queue(TThread.CurrentThread,
+      TThread.Queue(TThread.CurrentThread,
         procedure
         begin
           MemoData.Lines.BeginUpdate;
@@ -281,25 +286,23 @@ begin
               { exibe os dados da classificação }
               .ShowPredictedData(LTestInputData, LPredictedOutputData, LFitCost, LPredictCost)
               { exibe o resumo }
-              .ShowResume(LMlp, LTestOutputData, LPredictedOutputData)
-            ;
+              .ShowResume(LMlp, LTestOutputData, LPredictedOutputData);
           finally
             MemoData.Lines.EndUpdate;
           end;
         end);
-      finally
-        LStream.Free;
-      end;
     finally
-      TThread.Queue(TThread.CurrentThread,
+      LStream.Free;
+    end;
+  finally
+    TThread.Queue(TThread.CurrentThread,
       procedure
       begin
         Screen.Cursor := LCursor;
         ActivityIndicator.Animate := False;
         ActivityIndicator.SendToBack;
       end);
-    end;
-  end);
+  end;
 end;
 
 procedure TFormStart.FormCreate(Sender: TObject);
@@ -351,3 +354,4 @@ end;
 
 end.
 
+

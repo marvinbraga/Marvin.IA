@@ -27,6 +27,10 @@ object FormStart: TFormStart
     TabOrder = 0
     object TabDataFile: TTabSheet
       Caption = 'Data File'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object PanelToolBar: TPanel
         Left = 0
         Top = 0
@@ -87,6 +91,10 @@ object FormStart: TFormStart
         TabOrder = 1
         object TabSheetCollectionData: TTabSheet
           Caption = 'Pure Data'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object MemoData: TMemo
             AlignWithMargins = True
             Left = 3
@@ -108,6 +116,10 @@ object FormStart: TFormStart
           Caption = 'Graphics Data'
           ImageIndex = 1
           TabVisible = False
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object PanelGraphicsData: TPanel
             AlignWithMargins = True
             Left = 3
@@ -119,62 +131,6 @@ object FormStart: TFormStart
             Caption = ' '
             ShowCaption = False
             TabOrder = 0
-            object ChartPureData: TChart
-              Left = 0
-              Top = 16
-              Width = 441
-              Height = 313
-              Title.Text.Strings = (
-                'Iris Data')
-              Chart3DPercent = 20
-              TabOrder = 0
-              DefaultCanvas = 'TGDIPlusCanvas'
-              PrintMargins = (
-                15
-                10
-                15
-                10)
-              ColorPaletteIndex = 13
-              object Series1: TPointSeries
-                Title = 'Iris Setosa'
-                ClickableLine = False
-                Pointer.InflateMargins = True
-                Pointer.Style = psRectangle
-                XValues.Name = 'X'
-                XValues.Order = loAscending
-                YValues.Name = 'Y'
-                YValues.Order = loNone
-                Data = {
-                  00190000000000000000B0834000000000007483400000000000308140000000
-                  00009C83400000000000BC81400000000000507E400000000000507E40000000
-                  00005480400000000000C4834000000000007C85400000000000748840000000
-                  0000E48B400000000000BC8B400000000000208C400000000000CC8F40000000
-                  000076914000000000002C90400000000000F48F400000000000DA9140000000
-                  0000489240000000000016924000000000004090400000000000D09140000000
-                  00008492400000000000DA9140}
-                Detail = {0000000000}
-              end
-              object Series2: TPointSeries
-                Title = 'Iris Versicolor'
-                ClickableLine = False
-                Pointer.InflateMargins = True
-                Pointer.Style = psRectangle
-                XValues.Name = 'X'
-                XValues.Order = loAscending
-                YValues.Name = 'Y'
-                YValues.Order = loNone
-              end
-              object Series3: TPointSeries
-                Title = 'Iris Virginica'
-                ClickableLine = False
-                Pointer.InflateMargins = True
-                Pointer.Style = psRectangle
-                XValues.Name = 'X'
-                XValues.Order = loAscending
-                YValues.Name = 'Y'
-                YValues.Order = loNone
-              end
-            end
           end
         end
       end
@@ -182,11 +138,15 @@ object FormStart: TFormStart
     object TabTrain: TTabSheet
       Caption = 'Train'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object LabelCabecalhoTreino: TLabel
         AlignWithMargins = True
         Left = 8
         Top = 8
-        Width = 928
+        Width = 136
         Height = 23
         Margins.Left = 8
         Margins.Top = 8
@@ -200,7 +160,6 @@ object FormStart: TFormStart
         Font.Name = 'Roboto'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 136
       end
       object MemoTrain: TMemo
         AlignWithMargins = True
@@ -222,11 +181,15 @@ object FormStart: TFormStart
     object TabTest: TTabSheet
       Caption = 'Test'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object LabelCabecalhoTeste: TLabel
         AlignWithMargins = True
         Left = 8
         Top = 8
-        Width = 928
+        Width = 130
         Height = 23
         Margins.Left = 8
         Margins.Top = 8
@@ -240,7 +203,6 @@ object FormStart: TFormStart
         Font.Name = 'Roboto'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 130
       end
       object MemoPredict: TMemo
         AlignWithMargins = True

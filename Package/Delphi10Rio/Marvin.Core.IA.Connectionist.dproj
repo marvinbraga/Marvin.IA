@@ -179,6 +179,7 @@
         <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Metric.pas"/>
         <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Perceptron.Clss.pas"/>
         <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Perceptron.pas"/>
+        <DCCReference Include="..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Cost.MSE.Clss.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

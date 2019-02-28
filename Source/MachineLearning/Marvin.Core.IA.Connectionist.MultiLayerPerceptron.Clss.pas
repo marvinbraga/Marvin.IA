@@ -3,7 +3,7 @@ unit Marvin.Core.IA.Connectionist.MultiLayerPerceptron.Clss;
 {
   MIT License
 
-  Copyright (c) 2019 Marcus Vinicius D. B. Braga
+  Copyright (c) 2018-2019 Marcus Vinicius D. B. Braga
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -355,7 +355,7 @@ end;
 function TMultiLayerPerceptron.Cost: Double;
 begin
   { com a camada de saída, seleciona o tipo da função de custo }
-  Result := TCostType.Default.New(Self.GetOutputLayer).Calculate;
+  Result := TCostType.MeanSquaredError.New(Self.GetOutputLayer).Calculate;
 end;
 
 constructor TMultiLayerPerceptron.Create;

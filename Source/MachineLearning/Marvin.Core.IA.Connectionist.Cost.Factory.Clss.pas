@@ -3,7 +3,7 @@ unit Marvin.Core.IA.Connectionist.Cost.Factory.Clss;
 {
   MIT License
 
-  Copyright (c) 2019 Marcus Vinicius D. B. Braga
+  Copyright (c) 2018-2019 Marcus Vinicius D. B. Braga
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +42,7 @@ implementation
 
 uses
   Marvin.Core.IA.Connectionist.Cost.Default.Clss,
+  Marvin.Core.IA.Connectionist.Cost.MSE.Clss,
   Marvin.Core.IA.Connectionist.Exceptions.Clss;
 
 { TCostTypeHelper }
@@ -51,7 +52,7 @@ begin
   case Self of
     Default: Result := TCostDefault.New(ALayer);
     MeanAbsoluteError: raise EInvalidFactory.Create;
-    MeanSquaredError: raise EInvalidFactory.Create;
+    MeanSquaredError: Result := TCostMSE.New(ALayer);
     AbsoluteMedianError: raise EInvalidFactory.Create;
   end;
 end;

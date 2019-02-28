@@ -1,4 +1,4 @@
-unit Marvin.Core.IA.Connectionist.Synapses;
+unit Marvin.Core.IA.Connectionist.Cost.MSE.Clss;
 
 {
   MIT License
@@ -27,15 +27,63 @@ unit Marvin.Core.IA.Connectionist.Synapses;
 interface
 
 uses
-  Marvin.Core.IA.Connectionist.Synapse,
-  Marvin.Core.InterfacedList;
+  { marvin }
+  Marvin.Core.IA.Connectionist.Layer,
+  Marvin.Core.IA.Connectionist.Cost;
 
 type
-  ISynapses = interface
-    function List: IList<ISynapse>;
-    function ToString: string;
+  TCostMSE = class(TInterfacedObject, ICost)
+  strict private
+    FLayer: ILayer;
+  protected
+    function Calculate: Double;
+  public
+    constructor Create(const ALayer: ILayer);
+    destructor Destroy; override;
+    class function New(const ALayer: ILayer): ICost;
   end;
 
 implementation
 
+{ TCostMSE }
+
+function TCostMSE.Calculate: Double;
+var
+  LIndexNeuron: Integer;
+  LCount: Integer;
+  LCost: Double;
+begin
+  LCost := 0;
+  LCount := FLayer.Neurons.Count;
+  for LIndexNeuron := 0 to FLayer.Neurons.Count - 1 do
+  begin
+    { with each neuron }
+    with FLayer.Neurons.Get(LIndexNeuron) do
+    begin
+      { calcula o valor para o erro }
+      LCost := LCost + Sqr(Target - Value);
+    end;
+  end;
+  { returns the error }
+  Result := Sqrt(LCost / LCount);
+end;
+
+constructor TCostMSE.Create(const ALayer: ILayer);
+begin
+  inherited Create;
+  FLayer := ALayer;
+end;
+
+destructor TCostMSE.Destroy;
+begin
+  FLayer := nil;
+  inherited;
+end;
+
+class function TCostMSE.New(const ALayer: ILayer): ICost;
+begin
+  Result := TCostMSE.Create(ALayer);
+end;
+
 end.
+
