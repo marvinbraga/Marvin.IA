@@ -59,7 +59,7 @@ If you have questions or general suggestions, don't hesitate to submit a new [Gi
 
 ## License (MIT)
 
-Copyright (c) 2019 Marcus Vinicius D. B. Braga
+Copyright (c) 2018-2019 Marcus Vinicius D. B. Braga
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
