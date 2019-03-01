@@ -1,0 +1,10 @@
+{
+	"name": "marvin_ia",
+	"description": "",
+	"version": "0.0.5",
+	"private": false,
+	"homepage": "",
+	"mainsrc": "../../Source/Core;../../Source/MachineLearning;../../Source/Utils",
+	"supported": "xe+",
+	"dprojFile": ""
+}
