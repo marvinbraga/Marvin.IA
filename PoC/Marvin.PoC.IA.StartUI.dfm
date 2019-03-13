@@ -19,18 +19,14 @@ object FormStart: TFormStart
   TextHeight = 13
   object pgcInfo: TPageControl
     Left = 0
-    Top = 0
+    Top = 3
     Width = 952
-    Height = 600
+    Height = 597
     ActivePage = TabDataFile
     Align = alClient
     TabOrder = 0
     object TabDataFile: TTabSheet
       Caption = 'Data File'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object PanelToolBar: TPanel
         Left = 0
         Top = 0
@@ -83,7 +79,7 @@ object FormStart: TFormStart
         Left = 3
         Top = 44
         Width = 938
-        Height = 525
+        Height = 522
         ActivePage = TabSheetCollectionData
         Align = alClient
         HotTrack = True
@@ -91,16 +87,12 @@ object FormStart: TFormStart
         TabOrder = 1
         object TabSheetCollectionData: TTabSheet
           Caption = 'Pure Data'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object MemoData: TMemo
             AlignWithMargins = True
             Left = 3
             Top = 3
             Width = 924
-            Height = 491
+            Height = 488
             Align = alClient
             Font.Charset = ANSI_CHARSET
             Font.Color = clWindowText
@@ -116,21 +108,62 @@ object FormStart: TFormStart
           Caption = 'Graphics Data'
           ImageIndex = 1
           TabVisible = False
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object PanelGraphicsData: TPanel
             AlignWithMargins = True
             Left = 3
             Top = 3
             Width = 924
-            Height = 491
+            Height = 488
             Align = alClient
             BevelOuter = bvNone
             Caption = ' '
             ShowCaption = False
             TabOrder = 0
+            object Chart1: TChart
+              AlignWithMargins = True
+              Left = 3
+              Top = 3
+              Width = 918
+              Height = 482
+              Border.Color = clGray
+              Border.Fill.Color = clGray
+              Legend.Visible = False
+              Title.Text.Strings = (
+                'Train Cost x Epochs Covered')
+              BottomAxis.Axis.Color = clGray
+              BottomAxis.AxisValuesFormat = '#,##0.##'
+              DepthAxis.Axis.Color = 8421440
+              DepthTopAxis.Axis.Color = 8421440
+              DepthTopAxis.Axis.Width = 0
+              LeftAxis.Axis.Color = 8421440
+              LeftAxis.Axis.Width = 0
+              LeftAxis.AxisValuesFormat = '#,##0.0000'
+              RightAxis.Axis.Color = 8421440
+              TopAxis.Axis.Color = 8421440
+              View3D = False
+              Align = alClient
+              BevelOuter = bvNone
+              Color = 14671839
+              TabOrder = 0
+              DefaultCanvas = 'TGDIPlusCanvas'
+              PrintMargins = (
+                15
+                23
+                15
+                23)
+              ColorPaletteIndex = 13
+              object Series1: TPointSeries
+                Title = 'Iris Dataset'
+                ClickableLine = False
+                Pointer.InflateMargins = True
+                Pointer.Pen.Visible = False
+                Pointer.Style = psCircle
+                XValues.Name = 'X'
+                XValues.Order = loNone
+                YValues.Name = 'Y'
+                YValues.Order = loNone
+              end
+            end
           end
         end
       end
@@ -138,15 +171,11 @@ object FormStart: TFormStart
     object TabTrain: TTabSheet
       Caption = 'Train'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object LabelCabecalhoTreino: TLabel
         AlignWithMargins = True
         Left = 8
         Top = 8
-        Width = 136
+        Width = 928
         Height = 23
         Margins.Left = 8
         Margins.Top = 8
@@ -160,36 +189,126 @@ object FormStart: TFormStart
         Font.Name = 'Roboto'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 136
       end
-      object MemoTrain: TMemo
+      object PageControlTrain: TPageControl
         AlignWithMargins = True
         Left = 3
         Top = 42
         Width = 938
-        Height = 527
+        Height = 524
+        ActivePage = TabSheetTrainGraphic
         Align = alClient
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Roboto Mono'
-        Font.Style = []
-        ParentFont = False
-        ScrollBars = ssBoth
+        HotTrack = True
+        MultiLine = True
         TabOrder = 0
+        object TabSheetTrainData: TTabSheet
+          Caption = 'Train Data'
+          object MemoTrain: TMemo
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 924
+            Height = 490
+            Align = alClient
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Roboto Mono'
+            Font.Style = []
+            ParentFont = False
+            ScrollBars = ssBoth
+            TabOrder = 0
+          end
+        end
+        object TabSheetTrainGraphic: TTabSheet
+          Caption = 'Train Graphics'
+          ImageIndex = 1
+          object pnl1: TPanel
+            AlignWithMargins = True
+            Left = 3
+            Top = 3
+            Width = 924
+            Height = 490
+            Align = alClient
+            BevelOuter = bvNone
+            Caption = ' '
+            ShowCaption = False
+            TabOrder = 0
+            object ChartTrain: TChart
+              AlignWithMargins = True
+              Left = 3
+              Top = 3
+              Width = 918
+              Height = 484
+              Border.Color = clGray
+              Border.Fill.Color = clGray
+              Legend.Visible = False
+              Title.Text.Strings = (
+                'Train Cost x Epochs Covered')
+              BottomAxis.Axis.Color = clGray
+              BottomAxis.AxisValuesFormat = '#,##0.##'
+              DepthAxis.Axis.Color = 8421440
+              DepthTopAxis.Axis.Color = 8421440
+              DepthTopAxis.Axis.Width = 0
+              LeftAxis.Axis.Color = 8421440
+              LeftAxis.Axis.Width = 0
+              LeftAxis.AxisValuesFormat = '#,##0.0000'
+              RightAxis.Axis.Color = 8421440
+              TopAxis.Axis.Color = 8421440
+              View3D = False
+              Align = alClient
+              BevelOuter = bvNone
+              Color = 14671839
+              TabOrder = 0
+              DefaultCanvas = 'TGDIPlusCanvas'
+              PrintMargins = (
+                15
+                23
+                15
+                23)
+              ColorPaletteIndex = 13
+              object LineCost: TLineSeries
+                Marks.Emboss.Color = 8487297
+                Marks.Font.Color = clSilver
+                Marks.Shadow.Color = 8487297
+                Marks.BackColor = clBlack
+                Marks.Callout.Length = 20
+                Marks.Symbol.Visible = True
+                Marks.Color = clBlack
+                SeriesColor = 16749459
+                Shadow.Visible = False
+                Title = 'Train Cost'
+                ValueFormat = '#,##0.000'
+                Brush.BackColor = clDefault
+                Dark3D = False
+                DrawStyle = dsCurve
+                LinePen.Width = 3
+                Pointer.InflateMargins = True
+                Pointer.Style = psRectangle
+                XValues.Name = 'X'
+                XValues.Order = loNone
+                YValues.Name = 'Y'
+                YValues.Order = loNone
+                object TSmoothingFunction
+                  CalcByValue = False
+                  Period = 1.000000000000000000
+                  Factor = 8
+                end
+              end
+            end
+          end
+        end
       end
     end
     object TabTest: TTabSheet
       Caption = 'Test'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object LabelCabecalhoTeste: TLabel
         AlignWithMargins = True
         Left = 8
         Top = 8
-        Width = 130
+        Width = 928
         Height = 23
         Margins.Left = 8
         Margins.Top = 8
@@ -203,13 +322,14 @@ object FormStart: TFormStart
         Font.Name = 'Roboto'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 130
       end
       object MemoPredict: TMemo
         AlignWithMargins = True
         Left = 3
         Top = 42
         Width = 938
-        Height = 527
+        Height = 524
         Align = alClient
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -228,11 +348,29 @@ object FormStart: TFormStart
     IndicatorSize = aisLarge
     IndicatorType = aitSectorRing
   end
+  object ProgressBar: TProgressBar
+    Left = 0
+    Top = 0
+    Width = 952
+    Height = 3
+    Align = alTop
+    Max = 5000
+    Position = 5000
+    BarColor = 13264128
+    TabOrder = 2
+  end
   object PopupMenu: TPopupMenu
     Left = 880
     Top = 112
     object ItemStyles: TMenuItem
       Caption = 'Styles'
     end
+  end
+  object TimerCost: TTimer
+    Enabled = False
+    Interval = 100
+    OnTimer = TimerCostTimer
+    Left = 880
+    Top = 160
   end
 end

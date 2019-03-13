@@ -50,7 +50,7 @@ uses
   VclTee.TeeProcs,
   VclTee.Chart,
   VCL.WinXCtrls,
-  VCL.Menus;
+  VCL.Menus, VCLTee.TeeSpline;
 
 type
   TFormStart = class(TForm)
@@ -62,7 +62,6 @@ type
     TabTest: TTabSheet;
     MemoData: TMemo;
     LabelCabecalhoTreino: TLabel;
-    MemoTrain: TMemo;
     MemoPredict: TMemo;
     LabelCabecalhoTeste: TLabel;
     Label1: TLabel;
@@ -70,19 +69,29 @@ type
     TabSheetCollectionData: TTabSheet;
     TabSheetGraphicsData: TTabSheet;
     PanelGraphicsData: TPanel;
-    ChartPureData: TChart;
-    Series1: TPointSeries;
-    Series2: TPointSeries;
-    Series3: TPointSeries;
     ActivityIndicator: TActivityIndicator;
     PopupMenu: TPopupMenu;
     ItemStyles: TMenuItem;
+    PageControlTrain: TPageControl;
+    TabSheetTrainData: TTabSheet;
+    MemoTrain: TMemo;
+    TabSheetTrainGraphic: TTabSheet;
+    pnl1: TPanel;
+    ChartTrain: TChart;
+    LineCost: TLineSeries;
+    TimerCost: TTimer;
+    Chart1: TChart;
+    ProgressBar: TProgressBar;
+    Series1: TPointSeries;
     procedure ButtonLoadFileClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure TimerCostTimer(Sender: TObject);
   private
     FStylesManager: IVclStyleManager;
+    FMlp: IClassifier;
+    FIsRunning: Boolean;
   private
     function GetIrisData: TFormStart;
     function ShowData(const AMemo: TMemo; const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
@@ -93,6 +102,8 @@ type
     function ShowPredictedData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>; const AFitCost: Double; const APredictCost: Double): TFormStart;
     function ShowResume(const AMlp: IClassifier; const ATestOutputData: IList<TDoubleArray>; const APredictedData: IList<TDoubleArray>): TFormStart;
     procedure ExecutePredict(const AFileName: string);
+    procedure InitProcessIndicators;
+    procedure ReleaseProcessIndicators;
   public
   end;
 
@@ -127,6 +138,7 @@ begin
   Result := Self;
   MemoData.Lines.Clear;
   MemoTrain.Lines.Clear;
+  pgcInfo.ActivePage := TabTrain;
 
 {$WARNINGS OFF}
   with TFileOpenDialog.Create(nil) do
@@ -154,6 +166,26 @@ begin
         Self.ExecutePredict(LFileName);
       end);
   end;
+end;
+
+procedure TFormStart.InitProcessIndicators;
+begin
+  ProgressBar.Visible := True;
+  ProgressBar.Position := 0;
+  ActivityIndicator.BringToFront;
+  ActivityIndicator.Animate := True;
+  Screen.Cursor := crHourGlass;
+  LineCost.Clear;
+  TimerCost.Enabled := True;
+end;
+
+procedure TFormStart.ReleaseProcessIndicators;
+begin
+  TimerCost.Enabled := False;
+  Screen.Cursor := crDefault;
+  ActivityIndicator.Animate := False;
+  ActivityIndicator.SendToBack;
+  ProgressBar.Visible := False;
 end;
 
 function TFormStart.ShowData(const AMemo: TMemo; const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
@@ -243,17 +275,12 @@ var
   LTreinInputData, LTreinOutputData: IList<TDoubleArray>;
   LTestInputData, LTestOutputData: IList<TDoubleArray>;
   LPredictedOutputData: IList<TDoubleArray>;
-  LMlp: IClassifier;
   LPredictCost, LFitCost: Double;
-  LCursor: TCursor;
 begin
   TThread.Queue(TThread.CurrentThread,
     procedure
     begin
-      ActivityIndicator.BringToFront;
-      ActivityIndicator.Animate := True;
-      LCursor := Screen.Cursor;
-      Screen.Cursor := crHourGlass;
+      Self.InitProcessIndicators;
     end);
   try
     LStream := TStringStream.Create('', TEncoding.UTF8);
@@ -265,9 +292,10 @@ begin
       { faz o split dos dados para treino e teste }
       TTestSplitter.New(LIrisInputData, LIrisOutputData, 0.3).ExecuteSplit(LTreinInputData, LTreinOutputData, LTestInputData, LTestOutputData);
       { cria o classificardor }
-      LMlp := TMLPClassifier.New(TSigmoidActivation.New, [8, 8], 0.9, 0.9, 5000);
-      LFitCost := LMlp.Fit(LTreinInputData, LTreinOutputData).Cost;
-      LPredictCost := LMlp.Predict(LTestInputData, LPredictedOutputData).Cost;
+      FMlp := TMLPClassifier.New(TSigmoidActivation.New, [8, 8], 0.9, 0.9, 5000);
+      ProgressBar.Max := FMlp.Epochs;
+      LFitCost := FMlp.Fit(LTreinInputData, LTreinOutputData).Cost;
+      LPredictCost := FMlp.Predict(LTestInputData, LPredictedOutputData).Cost;
 
       TThread.Queue(TThread.CurrentThread,
         procedure
@@ -286,7 +314,7 @@ begin
               { exibe os dados da classificação }
               .ShowPredictedData(LTestInputData, LPredictedOutputData, LFitCost, LPredictCost)
               { exibe o resumo }
-              .ShowResume(LMlp, LTestOutputData, LPredictedOutputData);
+              .ShowResume(FMlp, LTestOutputData, LPredictedOutputData);
           finally
             MemoData.Lines.EndUpdate;
           end;
@@ -298,9 +326,7 @@ begin
     TThread.Queue(TThread.CurrentThread,
       procedure
       begin
-        Screen.Cursor := LCursor;
-        ActivityIndicator.Animate := False;
-        ActivityIndicator.SendToBack;
+        Self.ReleaseProcessIndicators;
       end);
   end;
 end;
@@ -309,10 +335,14 @@ procedure TFormStart.FormCreate(Sender: TObject);
 begin
   ActivityIndicator.SendToBack;
   FStylesManager := TFactoryVCLStyleManager.New(ItemStyles);
+  LineCost.Clear;
+  ProgressBar.Visible := False;
+  FIsRunning := False;
 end;
 
 procedure TFormStart.FormDestroy(Sender: TObject);
 begin
+  FMlp := nil;
   FStylesManager := nil;
 end;
 
@@ -350,6 +380,22 @@ begin
   MemoTrain.Lines.Add('---------------');
   MemoTrain.Lines.Add('');
   Self.ShowData(MemoTrain, AInputData, AOutputData);
+end;
+
+procedure TFormStart.TimerCostTimer(Sender: TObject);
+begin
+  if not FIsRunning then
+  begin
+    FIsRunning := True;
+    try
+      var LEpochs := FMlp.EpochsCovered;
+      LineCost.AddXY(LEpochs, FMlp.Cost, '');
+      ProgressBar.Position := LEpochs;
+      ProgressBar.Update;
+    finally
+      FIsRunning := False;
+    end;
+  end;
 end;
 
 end.
