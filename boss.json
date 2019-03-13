@@ -4,7 +4,7 @@
 	"version": "0.0.5",
 	"private": false,
 	"homepage": "",
-	"mainsrc": "./Source/Core;./Source/MachineLearning;./Source/Utils",
+	"mainsrc": "Source/",
 	"supported": "xe+",
-	"dprojFile": ""
+	"dprojFile": "Package/Delphi10Rio/Marvin.Core.dproj;Package/Delphi10Rio/Marvin.Core.IA.Connectionist.dproj"
 }
