@@ -27,11 +27,11 @@ unit Marvin.PoC.IA.StartUI;
 interface
 
 uses
-  {marvin}
+  { marvin }
   Marvin.Core.InterfacedList,
   Marvin.Core.IA.Connectionist.Classifier,
   Marvin.Utils.VCL.StyleManager,
-  {embarcadero}
+  { embarcadero }
   Winapi.Windows,
   Winapi.Messages,
   System.SysUtils,
@@ -44,56 +44,63 @@ uses
   VCL.StdCtrls,
   VCL.ExtCtrls,
   VCL.ComCtrls,
+  VCL.WinXCtrls,
+  VCL.Menus,
   VclTee.TeeGDIPlus,
   VclTee.TeEngine,
   VclTee.Series,
   VclTee.TeeProcs,
   VclTee.Chart,
-  VCL.WinXCtrls,
-  VCL.Menus, VCLTee.TeeSpline;
+  VCLTee.TeeSpline;
 
 type
   TFormStart = class(TForm)
-    PanelToolBar: TPanel;
+    ActivityIndicator: TActivityIndicator;
     ButtonLoadFile: TButton;
-    pgcInfo: TPageControl;
-    TabDataFile: TTabSheet;
-    TabTrain: TTabSheet;
-    TabTest: TTabSheet;
-    MemoData: TMemo;
-    LabelCabecalhoTreino: TLabel;
-    MemoPredict: TMemo;
-    LabelCabecalhoTeste: TLabel;
+    ChartIrisDataset: TChart;
+    ChartTrain: TChart;
+    ItemStyles: TMenuItem;
     Label1: TLabel;
+    LabelCabecalhoTeste: TLabel;
+    LabelCabecalhoTreino: TLabel;
+    LineCost: TLineSeries;
+    MemoData: TMemo;
+    MemoPredict: TMemo;
+    MemoTrain: TMemo;
     PageControlData: TPageControl;
+    PageControlTrain: TPageControl;
+    PanelGraphicsData: TPanel;
+    PanelToolBar: TPanel;
+    pgcInfo: TPageControl;
+    pnl1: TPanel;
+    PopupMenu: TPopupMenu;
+    ProgressBar: TProgressBar;
+    SeriesSetosa: TPointSeries;
+    SeriesVersicolor: TPointSeries;
+    SeriesVirginica: TPointSeries;
+    TabDataFile: TTabSheet;
     TabSheetCollectionData: TTabSheet;
     TabSheetGraphicsData: TTabSheet;
-    PanelGraphicsData: TPanel;
-    ActivityIndicator: TActivityIndicator;
-    PopupMenu: TPopupMenu;
-    ItemStyles: TMenuItem;
-    PageControlTrain: TPageControl;
     TabSheetTrainData: TTabSheet;
-    MemoTrain: TMemo;
     TabSheetTrainGraphic: TTabSheet;
-    pnl1: TPanel;
-    ChartTrain: TChart;
-    LineCost: TLineSeries;
+    TabTest: TTabSheet;
+    TabTrain: TTabSheet;
     TimerCost: TTimer;
-    Chart1: TChart;
-    ProgressBar: TProgressBar;
-    Series1: TPointSeries;
     procedure ButtonLoadFileClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure TimerCostTimer(Sender: TObject);
   private
+    type TMemoArray = array of TMemo;
+  private
     FStylesManager: IVclStyleManager;
     FMlp: IClassifier;
     FIsRunning: Boolean;
   private
+    function ClearSeries: TFormStart;
     function GetIrisData: TFormStart;
+    function ShowIrisData(const AInput, AOutput: TDoubleArray): TFormStart;
     function ShowData(const AMemo: TMemo; const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
     function ShowOriginalData(const AText: string): TFormStart;
     function ShowConvertedData(const AInputData: IList<TDoubleArray>; const AOutputData: IList<TDoubleArray>): TFormStart;
@@ -104,6 +111,8 @@ type
     procedure ExecutePredict(const AFileName: string);
     procedure InitProcessIndicators;
     procedure ReleaseProcessIndicators;
+    procedure BeginUpdateMemos(const AMemos: TMemoArray);
+    procedure EndUpdateMemos(const AMemos: TMemoArray);
   public
   end;
 
@@ -113,10 +122,11 @@ var
 implementation
 
 uses
+  { embarcadero }
   System.Threading,
-  {marvin}
-  Marvin.PoC.IA.DataConverter,
+  { marvin }
   Marvin.Core.IA.Connectionist.Metric,
+  Marvin.PoC.IA.DataConverter,
   Marvin.PoC.IA.DataConverter.Clss,
   Marvin.Core.IA.Connectionist.ActivateFunction.Clss,
   Marvin.Core.IA.Connectionist.MLPClassifier.Clss,
@@ -125,9 +135,40 @@ uses
 
 {$R *.dfm}
 
+procedure TFormStart.BeginUpdateMemos(const AMemos: TMemoArray);
+var
+  LIndex: Integer;
+begin
+  for LIndex := Low(AMemos) to High(AMemos) do
+  begin
+    AMemos[LIndex].Lines.BeginUpdate;
+  end;
+end;
+
 procedure TFormStart.ButtonLoadFileClick(Sender: TObject);
 begin
   Self.GetIrisData;
+end;
+
+function TFormStart.ShowIrisData(const AInput, AOutput: TDoubleArray): TFormStart;
+begin
+  // Ainda está faltando exibir o restante dos dados nas séries.
+  Result := Self;
+  // setosa
+  if AOutput.IsEquals([1, 0, 0]) then
+  begin
+    SeriesSetosa.AddXY(AInput[0], AInput[1]);
+  end
+  // virginica
+  else if AOutput.IsEquals([0, 1, 0]) then
+  begin
+    SeriesVirginica.AddXY(AInput[0], AInput[1]);
+  end
+  // versicolor
+  else if AOutput.IsEquals([0, 0, 1]) then
+  begin
+    SeriesVersicolor.AddXY(AInput[0], AInput[1]);
+  end;
 end;
 
 function TFormStart.GetIrisData: TFormStart;
@@ -175,7 +216,7 @@ begin
   ActivityIndicator.BringToFront;
   ActivityIndicator.Animate := True;
   Screen.Cursor := crHourGlass;
-  LineCost.Clear;
+  Self.ClearSeries;
   TimerCost.Enabled := True;
 end;
 
@@ -203,6 +244,7 @@ begin
     LOutput.ToBinaryValue;
     { exibe }
     AMemo.Lines.Add(Format('Inputs: [%3.8f, %3.8f, %3.8f, %3.8f]; Outputs: [%3.8f, %3.8f, %3.8f]', [LInput[0], LInput[1], LInput[2], LInput[3], LOutput[0], LOutput[1], LOutput[2]]));
+    Self.ShowIrisData(LInput, LOutput);
     { recupera os dados }
     LInput := AInputData.MoveNext;
     LOutput := AOutputData.MoveNext;
@@ -268,6 +310,25 @@ begin
   MemoPredict.Lines.Add(Format('Epochs Covered: %d', [AMlp.EpochsCovered]));
 end;
 
+function TFormStart.ClearSeries: TFormStart;
+begin
+  Result := Self;
+  LineCost.Clear;
+  SeriesSetosa.Clear;
+  SeriesVirginica.Clear;
+  SeriesVersicolor.Clear;
+end;
+
+procedure TFormStart.EndUpdateMemos(const AMemos: TMemoArray);
+var
+  LIndex: Integer;
+begin
+  for LIndex := Low(AMemos) to High(AMemos) do
+  begin
+    AMemos[LIndex].Lines.EndUpdate;
+  end;
+end;
+
 procedure TFormStart.ExecutePredict(const AFileName: string);
 var
   LStream: TStringStream;
@@ -292,7 +353,7 @@ begin
       { faz o split dos dados para treino e teste }
       TTestSplitter.New(LIrisInputData, LIrisOutputData, 0.3).ExecuteSplit(LTreinInputData, LTreinOutputData, LTestInputData, LTestOutputData);
       { cria o classificardor }
-      FMlp := TMLPClassifier.New(TSigmoidActivation.New, [8, 8], 0.9, 0.9, 5000);
+      FMlp := TMLPClassifier.New(TSigmoidActivation.New, [8, 8], 0.9, 0.9, 2500);
       ProgressBar.Max := FMlp.Epochs;
       LFitCost := FMlp.Fit(LTreinInputData, LTreinOutputData).Cost;
       LPredictCost := FMlp.Predict(LTestInputData, LPredictedOutputData).Cost;
@@ -300,7 +361,7 @@ begin
       TThread.Queue(TThread.CurrentThread,
         procedure
         begin
-          MemoData.Lines.BeginUpdate;
+          Self.BeginUpdateMemos([MemoData, MemoPredict, MemoTrain]);
           try
             Self
               { exibe os dados originais }
@@ -316,7 +377,7 @@ begin
               { exibe o resumo }
               .ShowResume(FMlp, LTestOutputData, LPredictedOutputData);
           finally
-            MemoData.Lines.EndUpdate;
+            Self.EndUpdateMemos([MemoData, MemoPredict, MemoTrain]);
           end;
         end);
     finally
@@ -338,6 +399,7 @@ begin
   LineCost.Clear;
   ProgressBar.Visible := False;
   FIsRunning := False;
+  Self.ClearSeries;
 end;
 
 procedure TFormStart.FormDestroy(Sender: TObject);

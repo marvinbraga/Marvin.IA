@@ -40,6 +40,7 @@ type
     function IsMaxValue(const AValue: Double): Double;
     function ToBinaryValue: TDoubleArray;
     function ToString: string;
+    function IsEquals(const AValue: TDoubleArray): Boolean;
   end;
 
   IClassifier = interface
@@ -83,6 +84,26 @@ begin
   begin
     Result[LIndex] := Self[LIndex];
   end;
+end;
+
+function THelperDoubleArray.IsEquals(const AValue: TDoubleArray): Boolean;
+var
+  LResult: Boolean;
+  LIndex: Integer;
+begin
+  LResult := (Length(Self) = Length(AValue));
+  if LResult then
+  begin
+    for LIndex := Low(Self) to High(Self) do
+    begin
+      if (Self[LIndex] <> AValue[LIndex]) then
+      begin
+        LResult := False;
+        Break;
+      end;
+    end;
+  end;
+  Result := LResult;
 end;
 
 function THelperDoubleArray.IsMaxValue(const AValue: Double): Double;

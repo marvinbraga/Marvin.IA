@@ -80,13 +80,17 @@ object FormStart: TFormStart
         Top = 44
         Width = 938
         Height = 522
-        ActivePage = TabSheetCollectionData
+        ActivePage = TabSheetGraphicsData
         Align = alClient
         HotTrack = True
         MultiLine = True
         TabOrder = 1
         object TabSheetCollectionData: TTabSheet
           Caption = 'Pure Data'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object MemoData: TMemo
             AlignWithMargins = True
             Left = 3
@@ -107,7 +111,6 @@ object FormStart: TFormStart
         object TabSheetGraphicsData: TTabSheet
           Caption = 'Graphics Data'
           ImageIndex = 1
-          TabVisible = False
           object PanelGraphicsData: TPanel
             AlignWithMargins = True
             Left = 3
@@ -119,7 +122,7 @@ object FormStart: TFormStart
             Caption = ' '
             ShowCaption = False
             TabOrder = 0
-            object Chart1: TChart
+            object ChartIrisDataset: TChart
               AlignWithMargins = True
               Left = 3
               Top = 3
@@ -127,19 +130,27 @@ object FormStart: TFormStart
               Height = 482
               Border.Color = clGray
               Border.Fill.Color = clGray
-              Legend.Visible = False
+              Legend.Alignment = laBottom
               Title.Text.Strings = (
-                'Train Cost x Epochs Covered')
+                'Iris Dataset')
               BottomAxis.Axis.Color = clGray
               BottomAxis.AxisValuesFormat = '#,##0.##'
+              BottomAxis.Title.Caption = 'Petal Width'
               DepthAxis.Axis.Color = 8421440
               DepthTopAxis.Axis.Color = 8421440
               DepthTopAxis.Axis.Width = 0
               LeftAxis.Axis.Color = 8421440
               LeftAxis.Axis.Width = 0
-              LeftAxis.AxisValuesFormat = '#,##0.0000'
+              LeftAxis.AxisValuesFormat = '#,##0.00'
+              LeftAxis.Title.Caption = 'Sepal Length'
+              LeftAxis.Title.ShapeStyle = fosRoundRectangle
               RightAxis.Axis.Color = 8421440
+              RightAxis.Axis.Width = 0
+              RightAxis.AxisValuesFormat = '#,##0.00'
+              RightAxis.Title.Caption = 'Petal Length'
+              RightAxis.Title.ShapeStyle = fosRoundRectangle
               TopAxis.Axis.Color = 8421440
+              TopAxis.Title.Caption = 'Sepal Width'
               View3D = False
               Align = alClient
               BevelOuter = bvNone
@@ -152,9 +163,40 @@ object FormStart: TFormStart
                 15
                 23)
               ColorPaletteIndex = 13
-              object Series1: TPointSeries
-                Title = 'Iris Dataset'
+              object SeriesSetosa: TPointSeries
+                HorizAxis = aBothHorizAxis
+                Title = 'Setosa'
+                VertAxis = aBothVertAxis
                 ClickableLine = False
+                Pointer.Brush.Color = 10813348
+                Pointer.InflateMargins = True
+                Pointer.Pen.Visible = False
+                Pointer.Style = psCircle
+                XValues.Name = 'X'
+                XValues.Order = loNone
+                YValues.Name = 'Y'
+                YValues.Order = loNone
+              end
+              object SeriesVirginica: TPointSeries
+                HorizAxis = aBothHorizAxis
+                Title = 'Virginica'
+                VertAxis = aBothVertAxis
+                ClickableLine = False
+                Pointer.Brush.Color = 16752543
+                Pointer.InflateMargins = True
+                Pointer.Pen.Visible = False
+                Pointer.Style = psCircle
+                XValues.Name = 'X'
+                XValues.Order = loNone
+                YValues.Name = 'Y'
+                YValues.Order = loNone
+              end
+              object SeriesVersicolor: TPointSeries
+                HorizAxis = aBothHorizAxis
+                Title = 'Versicolor'
+                VertAxis = aBothVertAxis
+                ClickableLine = False
+                Pointer.Brush.Color = 7314943
                 Pointer.InflateMargins = True
                 Pointer.Pen.Visible = False
                 Pointer.Style = psCircle
@@ -171,6 +213,10 @@ object FormStart: TFormStart
     object TabTrain: TTabSheet
       Caption = 'Train'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object LabelCabecalhoTreino: TLabel
         AlignWithMargins = True
         Left = 8
@@ -204,6 +250,10 @@ object FormStart: TFormStart
         TabOrder = 0
         object TabSheetTrainData: TTabSheet
           Caption = 'Train Data'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object MemoTrain: TMemo
             AlignWithMargins = True
             Left = 3
@@ -224,6 +274,10 @@ object FormStart: TFormStart
         object TabSheetTrainGraphic: TTabSheet
           Caption = 'Train Graphics'
           ImageIndex = 1
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object pnl1: TPanel
             AlignWithMargins = True
             Left = 3
@@ -304,11 +358,15 @@ object FormStart: TFormStart
     object TabTest: TTabSheet
       Caption = 'Test'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object LabelCabecalhoTeste: TLabel
         AlignWithMargins = True
         Left = 8
         Top = 8
-        Width = 928
+        Width = 130
         Height = 23
         Margins.Left = 8
         Margins.Top = 8
@@ -322,7 +380,6 @@ object FormStart: TFormStart
         Font.Name = 'Roboto'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitWidth = 130
       end
       object MemoPredict: TMemo
         AlignWithMargins = True
