@@ -65,7 +65,7 @@ begin
 
   LInputTest.Add([0.46, 0.80]);
 
-  with TPerceptron.New(TSignalActivation.New, -1) do
+  with TPerceptron.New(TSignal.New, -1) do
   begin
     Fit(LInputTrein, LOutputTrein);
     Predict(LInputTest, LOutputTest);

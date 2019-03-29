@@ -30,58 +30,85 @@ uses
   Marvin.Core.IA.Connectionist.Activation;
 
 type
-  TDegreeActivation = class(TInterfacedObject, IActivation)
-  public
+  TDegree = class(TInterfacedObject, IActivation)
+  protected
     function Execute(const AValue: Double): Double;
+  public
     class function New: IActivation;
   end;
 
-  TSignalActivation = class(TInterfacedObject, IActivation)
-  public
+  TSignal = class(TInterfacedObject, IActivation)
+  protected
     function Execute(const AValue: Double): Double;
+  public
     class function New: IActivation;
   end;
 
-  TSigmoidActivation = class(TInterfacedObject, IActivation)
-  public
+  TSigmoid = class(TInterfacedObject, IActivation)
+  protected
     function Execute(const AValue: Double): Double;
+  public
     class function New: IActivation;
   end;
 
-  THyperbolicTangentActivation = class(TInterfacedObject, IActivation)
-  public
+  THyperbolicTangent = class(TInterfacedObject, IActivation)
+  protected
     function Execute(const AValue: Double): Double;
+  public
     class function New: IActivation;
   end;
 
-  TGaussianActivation = class(TInterfacedObject, IActivation)
+  TGaussian = class(TInterfacedObject, IActivation)
   private
     FCenter: Double;
     FSoftness: Double;
     FCenterMaximumDistance: Double;
+  protected
+    function Execute(const AValue: Double): Double;
   public
     constructor Create(const ACenter: Double; const ACenterMaximumDistance: Double; const ASoftness: Double);
     class function New(const ACenter: Double = 0; const ACenterMaximumDistance: Double = 2; const ASoftness: Double = 1): IActivation;
+  end;
+
+  TReLu = class(TInterfacedObject, IActivation)
+  protected
     function Execute(const AValue: Double): Double;
+  public
+    class function New: IActivation;
+  end;
+
+  TLeakyReLu = class(TInterfacedObject, IActivation)
+  private
+    FLeaky: Double;
+  protected
+    function Execute(const AValue: Double): Double;
+  public
+    constructor Create; overload;
+    constructor Create(const ALeaky: Double); overload;
+    class function New: IActivation; overload;
+    class function New(const ALeaky: Double): IActivation; overload;
   end;
 
 implementation
 
+uses
+  System.Math;
+
 { TSigmoideActivation }
 
-function TSigmoidActivation.Execute(const AValue: Double): Double;
+function TSigmoid.Execute(const AValue: Double): Double;
 begin
   Result := 1 / (1 + Exp(-AValue));
 end;
 
-class function TSigmoidActivation.New: IActivation;
+class function TSigmoid.New: IActivation;
 begin
-  Result := TSigmoidActivation.Create;
+  Result := TSigmoid.Create;
 end;
 
 { TDegreeActivation }
 
-function TDegreeActivation.Execute(const AValue: Double): Double;
+function TDegree.Execute(const AValue: Double): Double;
 begin
   Result := 0;
   if AValue >= 0 then
@@ -90,14 +117,14 @@ begin
   end;
 end;
 
-class function TDegreeActivation.New: IActivation;
+class function TDegree.New: IActivation;
 begin
-  Result := TDegreeActivation.Create;
+  Result := TDegree.Create;
 end;
 
 { TSignalActivation }
 
-function TSignalActivation.Execute(const AValue: Double): Double;
+function TSignal.Execute(const AValue: Double): Double;
 begin
   Result := -1;
   if AValue >= 0 then
@@ -106,27 +133,26 @@ begin
   end;
 end;
 
-class function TSignalActivation.New: IActivation;
+class function TSignal.New: IActivation;
 begin
-  Result := TSignalActivation.Create;
+  Result := TSignal.Create;
 end;
 
 { THyperbolicTangentActivation }
 
-function THyperbolicTangentActivation.Execute(
-  const AValue: Double): Double;
+function THyperbolicTangent.Execute(const AValue: Double): Double;
 begin
   Result := (1 - Exp(-AValue)) / (1 + Exp(-AValue));
 end;
 
-class function THyperbolicTangentActivation.New: IActivation;
+class function THyperbolicTangent.New: IActivation;
 begin
-  Result := THyperbolicTangentActivation.Create;
+  Result := THyperbolicTangent.Create;
 end;
 
 { TGaussianActivation }
 
-constructor TGaussianActivation.Create(const ACenter: Double; const ACenterMaximumDistance: Double; const ASoftness: Double);
+constructor TGaussian.Create(const ACenter: Double; const ACenterMaximumDistance: Double; const ASoftness: Double);
 begin
   inherited Create;
   FCenter := ACenter;
@@ -134,14 +160,64 @@ begin
   FCenterMaximumDistance := ACenterMaximumDistance;
 end;
 
-function TGaussianActivation.Execute(const AValue: Double): Double;
+function TGaussian.Execute(const AValue: Double): Double;
 begin
-  Result :=  Exp(-(Sqr(AValue - FCenter) / Sqr(FCenterMaximumDistance * FSoftness)));
+  Result := Exp(-(Sqr(AValue - FCenter) / Sqr(FCenterMaximumDistance * FSoftness)));
 end;
 
-class function TGaussianActivation.New(const ACenter: Double = 0; const ACenterMaximumDistance: Double = 2; const ASoftness: Double = 1): IActivation;
+class function TGaussian.New(const ACenter: Double = 0; const ACenterMaximumDistance: Double = 2; const ASoftness: Double = 1): IActivation;
 begin
-  Result := TGaussianActivation.Create(ACenter, ACenterMaximumDistance, ASoftness);
+  Result := TGaussian.Create(ACenter, ACenterMaximumDistance, ASoftness);
+end;
+
+{ TReLu }
+
+function TReLu.Execute(const AValue: Double): Double;
+begin
+  Result := 0;
+  if (AValue >= 0) then
+  begin
+    Result := AValue;
+  end;
+end;
+
+class function TReLu.New: IActivation;
+begin
+  Result := TReLu.Create;
+end;
+
+{ TLeakyReLu }
+
+constructor TLeakyReLu.Create;
+begin
+  inherited;
+  FLeaky := 0.2;
+end;
+
+constructor TLeakyReLu.Create(const ALeaky: Double);
+begin
+  Self.Create;
+  FLeaky := ALeaky;
+end;
+
+function TLeakyReLu.Execute(const AValue: Double): Double;
+begin
+  Result := FLeaky;
+  if (AValue >= 0) then
+  begin
+    Result := AValue;
+  end;
+end;
+
+class function TLeakyReLu.New: IActivation;
+begin
+  Result := TLeakyReLu.Create;
+end;
+
+class function TLeakyReLu.New(const ALeaky: Double): IActivation;
+begin
+  Result := TLeakyReLu.Create(ALeaky);
 end;
 
 end.
+

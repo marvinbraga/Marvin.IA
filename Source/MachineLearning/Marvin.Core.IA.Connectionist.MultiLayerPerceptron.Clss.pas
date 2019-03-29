@@ -401,7 +401,7 @@ begin
         if not(Assigned(FActivation)) then
         begin
           { executa a ativação com função sigmóide }
-          FActivation := TSigmoidActivation.New;
+          FActivation := TSigmoid.New;
         end;
         SetValue(Self.Activate(Value / LLayer.NeuronsCount, FActivation));
       end;
