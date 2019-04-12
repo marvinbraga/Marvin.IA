@@ -354,7 +354,9 @@ begin
       { faz o split dos dados para treino e teste }
       TTestSplitter.New(LIrisInputData, LIrisOutputData, 0.3).ExecuteSplit(LTreinInputData, LTreinOutputData, LTestInputData, LTestOutputData);
       { cria o classificardor }
-      FMlp := TMLPClassifier.New(TSigmoid.New, [TLayerInitInfo.New(TSigmoid.New, 8), TLayerInitInfo.New(TSigmoid.New, 8)], 0.9, 0.9, 2500);
+      FMlp := TMLPClassifier.New(TSigmoid.New,
+        [TLayerInitInfo.New(TSigmoid.New, 8), TLayerInitInfo.New(TSigmoid.New, 8)],
+        0.3, 0.9, 2500);
       ProgressBar.Max := FMlp.Epochs;
       LFitCost := FMlp.Fit(LTreinInputData, LTreinOutputData).Cost;
       LPredictCost := FMlp.Predict(LTestInputData, LPredictedOutputData).Cost;
