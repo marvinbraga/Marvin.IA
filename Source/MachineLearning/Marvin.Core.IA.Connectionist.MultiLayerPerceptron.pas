@@ -34,7 +34,8 @@ uses
   Marvin.Core.IA.Connectionist.Neuron,
   Marvin.Core.IA.Connectionist.Layer,
   Marvin.Core.IA.Connectionist.Support,
-  Marvin.Core.IA.Connectionist.Activation;
+  Marvin.Core.IA.Connectionist.Activation,
+  Marvin.Core.IA.Connectionist.LayerInitInfo;
 
 type
   IMultiLayerPerceptron = interface
@@ -55,10 +56,9 @@ type
     function SetOutputMaxValue(const ANeuronIndex: Integer; const AMaxValue: Double): IMultiLayerPerceptron; overload;
     function SetOutputMinValue(const ANeuronIndex: Integer; const AMinValue: Double): IMultiLayerPerceptron; overload;
     function SetOutputMinMaxValues(const ANeuronIndex: Integer; const AMinValue: Double; const AMaxValue: Double): IMultiLayerPerceptron; overload;
-    { Atribui a função de ativação }
-    function SetActivation(const AActivation: IActivation): IMultiLayerPerceptron;
     { Initializes the synapses with the imported values. }
     function InitSynapse(const ALayer: ILayer; const ASynapseId: string; const ASynapseValue: Double; const ANeuronId: string; const ALinkedNeuronId: string): IMultiLayerPerceptron;
+    function SetLayersInfo(const ALayersInitInfo: TLayerInitInfoArray): IMultiLayerPerceptron;
     { Assign maximum and minimum values to the neurons. }
     function SetNeuronMaxValue(const ANeuron: INeuron; const AMaxValue: Double): IMultiLayerPerceptron; overload;
     function SetNeuronMinValue(const ANeuron: INeuron; const AMinValue: Double): IMultiLayerPerceptron; overload;
@@ -89,6 +89,8 @@ type
     function Cost: Double;
     { elimina os pesos zerados }
     function Purge: IMultiLayerPerceptron;
+    { informa função de ativação para a camada de entrada }
+    function SetInputActivation(const AInputActivation: IActivation): IMultiLayerPerceptron;
     { atualiza o momento }
     function SetMomentum(const AMomentum: Double = 0.5): IMultiLayerPerceptron;
     { momento para atualização dos pesos sinápticos }

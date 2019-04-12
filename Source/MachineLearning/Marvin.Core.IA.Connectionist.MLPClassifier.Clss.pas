@@ -31,18 +31,19 @@ uses
   Marvin.Core.InterfacedList,
   Marvin.Core.IA.Connectionist.Classifier,
   Marvin.Core.IA.Connectionist.MultiLayerPerceptron,
-  Marvin.Core.IA.Connectionist.Activation;
+  Marvin.Core.IA.Connectionist.Activation,
+  Marvin.Core.IA.Connectionist.LayerInitInfo;
 
 type
   TMLPClassifier = class sealed(TInterfacedObject, IClassifier)
   private
     FMlp: IMultiLayerPerceptron;
+    FInputActivation: IActivation;
     FInputData: IList<TDoubleArray>;
     FOutputData: IList<TDoubleArray>;
     { hyper parameters }
     FHiddenLayerCount: Word; { Number of hidden layer. }
-    FHiddenLayerNeuronsCount: array of Word; { Number of neurons in the hidden layer. }
-    FActivation: IActivation; { Activation function for the hidden layer. }
+    FHiddenLayersInfo: TLayerInitInfoArray; { Activations and number of neurons in the hidden layer. }
     FLearningFile: string;
     FLearning: Double;
     // FSolver: ISolver; { The solver for weight optimization. }
@@ -70,8 +71,7 @@ type
     FIsForceLoad: Boolean;
   protected
     { hiperparâmetros }
-    function SetHiddenLayerSizes(const AHiddenLayerCount: Word; const AHiddenLayerNeuronsCount: array of Word): IClassifier;
-    function SetActivation(const AActivation: IActivation): IClassifier;
+    function SetHiddenLayerSizes(const AHiddenLayersInfo: TLayerInitInfoArray): IClassifier;
     function SetLearningFile(const ALearningFile: string): IClassifier;
     function SetLearning(const ALearning: Double): IClassifier;
     function SetMaxIter(const AMaxIter: Integer): IClassifier;
@@ -99,12 +99,10 @@ type
     function Train(const ATrainDataInputs: IList<TDoubleArray>; const ATrainDataOutputs: IList<TDoubleArray>): TMLPClassifier;
     function PrepareMlp: TMLPClassifier;
   public
-    constructor Create(const AHiddenLayerNeuronsCount: array of Word; const ALearning: Double = 0.9; const AMomentum: Double = 0.9; const AMaxIter: Integer = 200; const ALearningFile: string = 'Marvin.Neural.Learning.mlp'; const AIsForceLoad: Boolean = False); overload;
-    constructor Create(const AActivation: IActivation; const AHiddenLayerNeuronsCount: array of Word; const ALearning: Double = 0.9; const AMomentum: Double = 0.9; const AMaxIter: Integer = 200; const ALearningFile: string = 'Marvin.Neural.Learning.mlp'; const AIsForceLoad: Boolean = False); overload;
+    constructor Create(const AInputActivation: IActivation; const AHiddenLayersInfo: TLayerInitInfoArray; const ALearning: Double = 0.9; const AMomentum: Double = 0.9; const AMaxIter: Integer = 200; const ALearningFile: string = 'Marvin.Neural.Learning.mlp'; const AIsForceLoad: Boolean = False); overload;
     destructor Destroy; override;
     { factory methods }
-    class function New(const AHiddenLayerNeuronsCount: array of Word; const ALearning: Double = 0.9; const AMomentum: Double = 0.9; const AMaxIter: Integer = 200; const ALearningFile: string = 'Marvin.Neural.Learning.mlp'; const AIsForceLoad: Boolean = False): IClassifier; overload;
-    class function New(const AActivation: IActivation; const AHiddenLayerNeuronsCount: array of Word; const ALearning: Double = 0.9; const AMomentum: Double = 0.9; const AMaxIter: Integer = 200; const ALearningFile: string = 'Marvin.Neural.Learning.mlp'; const AIsForceLoad: Boolean = False): IClassifier; overload;
+    class function New(const AInputActivation: IActivation; AHiddenLayersInfo: TLayerInitInfoArray; const ALearning: Double = 0.9; const AMomentum: Double = 0.9; const AMaxIter: Integer = 200; const ALearningFile: string = 'Marvin.Neural.Learning.mlp'; const AIsForceLoad: Boolean = False): IClassifier; overload;
   end;
 
 implementation
@@ -116,36 +114,23 @@ uses
 
 { TMLPClassifier }
 
-constructor TMLPClassifier.Create(const AHiddenLayerNeuronsCount: array of Word;
-  const ALearning, AMomentum: Double; const AMaxIter: Integer; const ALearningFile: string; const AIsForceLoad: Boolean);
+constructor TMLPClassifier.Create(const AInputActivation: IActivation; const AHiddenLayersInfo: TLayerInitInfoArray; const ALearning: Double = 0.9; const AMomentum: Double = 0.9; const AMaxIter: Integer = 200; const ALearningFile: string = 'Marvin.Neural.Learning.mlp'; const AIsForceLoad: Boolean = False);
 begin
   inherited Create;
   Self.InitMlp;
   { recupera os hiperparâmetros }
+  FInputActivation := AInputActivation;
   FIsForceLoad := AIsForceLoad;
   FLearningFile := ALearningFile;
   FLearning := ALearning;
   FMomentum := AMomentum;
   FMaxIter := AMaxIter;
-  Self.SetHiddenLayerSizes(Length(AHiddenLayerNeuronsCount), AHiddenLayerNeuronsCount);
+  Self.SetHiddenLayerSizes(AHiddenLayersInfo);
 end;
 
-constructor TMLPClassifier.Create(const AActivation: IActivation; const AHiddenLayerNeuronsCount: array of Word;
-  const ALearning, AMomentum: Double; const AMaxIter: Integer; const ALearningFile: string; const AIsForceLoad: Boolean);
+class function TMLPClassifier.New(const AInputActivation: IActivation; AHiddenLayersInfo: TLayerInitInfoArray; const ALearning: Double = 0.9; const AMomentum: Double = 0.9; const AMaxIter: Integer = 200; const ALearningFile: string = 'Marvin.Neural.Learning.mlp'; const AIsForceLoad: Boolean = False): IClassifier;
 begin
-  Self.Create(AHiddenLayerNeuronsCount, ALearning, AMomentum, AMaxIter, ALearningFile, AIsForceLoad);
-  { recupera os hiperparâmetros }
-  FActivation := AActivation;
-end;
-
-class function TMLPClassifier.New(const AHiddenLayerNeuronsCount: array of Word; const ALearning, AMomentum: Double; const AMaxIter: Integer; const ALearningFile: string; const AIsForceLoad: Boolean): IClassifier;
-begin
-  Result := TMLPClassifier.Create(AHiddenLayerNeuronsCount, ALearning, AMomentum, AMaxIter, ALearningFile, AIsForceLoad);
-end;
-
-class function TMLPClassifier.New(const AActivation: IActivation; const AHiddenLayerNeuronsCount: array of Word; const ALearning, AMomentum: Double; const AMaxIter: Integer; const ALearningFile: string; const AIsForceLoad: Boolean): IClassifier;
-begin
-  Result := TMLPClassifier.Create(AActivation, AHiddenLayerNeuronsCount, ALearning, AMomentum, AMaxIter, ALearningFile, AIsForceLoad);
+  Result := TMLPClassifier.Create(AInputActivation, AHiddenLayersInfo, ALearning, AMomentum, AMaxIter, ALearningFile, AIsForceLoad);
 end;
 
 destructor TMLPClassifier.Destroy;
@@ -175,6 +160,7 @@ begin
   FMlp.SetLearnFile(FLearningFile);
   { recupera os dados }
   FInputData.Add(ATrainDataInputs);
+  FMlp.SetInputActivation(FInputActivation);
   FOutputData.Add(ATrainDataOutputs);
   { verifica a estrutura da rede, inputs e outputs }
   LNumberOfInputs := Length(FInputData.Get(0));
@@ -186,9 +172,9 @@ begin
   { neurônios das camadas escondida }
   if FHiddenLayerCount > 0 then
   begin
-    for LIndex := 1 to FHiddenLayerCount do
+    for LIndex := 0 to FHiddenLayerCount - 1 do
     begin
-      FMlp.AddLayerConfig(FHiddenLayerNeuronsCount[LIndex]);
+      FMlp.AddLayerConfig(FHiddenLayersInfo[LIndex].NeuronCount);
     end;
   end;
   FMlp
@@ -240,7 +226,7 @@ begin
   { configura a MLP }
   FMlp
     .Clear
-    .SetActivation(FActivation)
+    .SetLayersInfo(FHiddenLayersInfo)
     .SetLearnFile(FLearningFile)
     .SetLearning(FLearning)
     .SetMomentum(FMomentum);
@@ -379,23 +365,18 @@ begin
   end;
 end;
 
-function TMLPClassifier.SetActivation(const AActivation: IActivation): IClassifier;
-begin
-  Result := Self;
-  FActivation := AActivation;
-end;
-
-function TMLPClassifier.SetHiddenLayerSizes(const AHiddenLayerCount: Word; const AHiddenLayerNeuronsCount: array of Word): IClassifier;
+function TMLPClassifier.SetHiddenLayerSizes(const AHiddenLayersInfo: TLayerInitInfoArray): IClassifier;
 var
   LIndex: Integer;
 begin
   Result := Self;
-  FHiddenLayerCount := AHiddenLayerCount;
-  SetLength(FHiddenLayerNeuronsCount, Length(AHiddenLayerNeuronsCount));
-  for LIndex := Low(AHiddenLayerNeuronsCount) to High(AHiddenLayerNeuronsCount) do
-  begin
-    FHiddenLayerNeuronsCount[LIndex] := AHiddenLayerNeuronsCount[LIndex];
-  end;
+  FHiddenLayerCount := Length(AHiddenLayersInfo);
+  FHiddenLayersInfo := AHiddenLayersInfo;
+//  SetLength(FHiddenLayersInfo, FHiddenLayerCount);
+//  for LIndex := Low(AHiddenLayersInfo) to High(AHiddenLayersInfo) do
+//  begin
+//    FHiddenLayersInfo[LIndex] := TLayerInitInfo.New(AHiddenLayersInfo[LIndex];
+//  end;
 end;
 
 function TMLPClassifier.SetInputsMinMaxValues(const AMinValue, AMaxValue: Double): TMLPClassifier;

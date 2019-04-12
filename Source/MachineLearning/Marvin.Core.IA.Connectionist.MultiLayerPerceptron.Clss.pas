@@ -36,7 +36,8 @@ uses
   Marvin.Core.IA.Connectionist.Neuron,
   Marvin.Core.IA.Connectionist.Layer,
   Marvin.Core.IA.Connectionist.Layers,
-  Marvin.Core.IA.Connectionist.Support;
+  Marvin.Core.IA.Connectionist.Support,
+  Marvin.Core.IA.Connectionist.LayerInitInfo;
 
 type
   TMultiLayerPerceptron = class(TInterfacedObject, IMultiLayerPerceptron)
@@ -49,8 +50,10 @@ type
     FLearning: Double;
     FLayersConfig: TList<Word>;
     FLayers: IList<ILayer>;
-    FActivation: IActivation;
+    FInputActivation: IActivation;
+    FInitLayersInfo: TLayerInitInfoArray;
   protected
+    function SetLayersInfo(const ALayersInitInfo: TLayerInitInfoArray): IMultiLayerPerceptron;
     { inicializa as camadas de acordo com as informações da configuração }
     function InitLayers: TMultiLayerPerceptron;
     { inicializa as sinapses }
@@ -80,8 +83,6 @@ type
     { manutenção }
     function Save(const ASupportMultiLayerPerceptron: ISupportMultiLayerPerceptron): IMultiLayerPerceptron;
     function Load(const ASupportMultiLayerPerceptron: ISupportMultiLayerPerceptron): IMultiLayerPerceptron;
-    { Atribui a função de ativação }
-    function SetActivation(const AActivation: IActivation): IMultiLayerPerceptron;
     { informa os valores para os neurônios da entrada }
     function SetInput(const ANeuronIndex: Integer; const AValue: Double; const AMinValue: Double; const AMaxValue: Double): IMultiLayerPerceptron; overload;
     function SetInput(const ANeuron: INeuron; const AValue: Double; const AMinValue: Double; const AMaxValue: Double): IMultiLayerPerceptron; overload;
@@ -116,6 +117,8 @@ type
     function GetOutputLayer: ILayer;
     { limpa os dados da MLP }
     function Clear: IMultiLayerPerceptron;
+    { informa função de ativação para a camada de entrada }
+    function SetInputActivation(const AInputActivation: IActivation): IMultiLayerPerceptron;
     { atualiza o gama }
     function SetGama(const AGama: Double = 0): IMultiLayerPerceptron;
     { configura uma nova camada informando sua quantidade de neurônios }
@@ -376,6 +379,7 @@ function TMultiLayerPerceptron.FeedForward: TMultiLayerPerceptron;
 var
   LLayer, LNextLayer: ILayer;
   LIndexLayers, LIndex: Integer;
+  LActivation: IActivation;
 begin
   Result := Self;
   { percorre todas as camadas, exceto a camada de saída }
@@ -392,18 +396,20 @@ begin
         LinkedNeuron.SetValue(LinkedNeuron.Value + Neuron.Value * Value);
       end;
     end;
+    { prepara a ativação }
+    LActivation := FInputActivation;
+    { para as camadas escondidas }
+    if LLayer.Index > 0 then
+    begin
+      LActivation := FInitLayersInfo[LLayer.Index - 1].Activation;
+    end;
     { percorre todos os neurônios da camada posterior }
     for LIndex := 0 to LNextLayer.Neurons.Count - 1 do
     begin
       { recupera o neurônio }
       with LNextLayer.Neurons.Get(LIndex) do
       begin
-        if not(Assigned(FActivation)) then
-        begin
-          { executa a ativação com função sigmóide }
-          FActivation := TSigmoid.New;
-        end;
-        SetValue(Self.Activate(Value / LLayer.NeuronsCount, FActivation));
+        SetValue(Self.Activate(Value / LLayer.NeuronsCount, LActivation));
       end;
     end;
   end;
@@ -459,6 +465,12 @@ begin
     { configura as camadas escondidas }
     LLayerType := HiddenLayer;
   end;
+end;
+
+function TMultiLayerPerceptron.SetLayersInfo(const ALayersInitInfo: TLayerInitInfoArray): IMultiLayerPerceptron;
+begin
+  Result := Self;
+  FInitLayersInfo := ALayersInitInfo;
 end;
 
 function TMultiLayerPerceptron.InitSynapse(const ALayer: ILayer; const ASynapseId: string; const ASynapseValue: Double; const ANeuronId: string; const ALinkedNeuronId: string): IMultiLayerPerceptron;
@@ -659,6 +671,12 @@ begin
     .SetInputValue(ANeuron, AValue);
 end;
 
+function TMultiLayerPerceptron.SetInputActivation(const AInputActivation: IActivation): IMultiLayerPerceptron;
+begin
+  Result := Self;
+  FInputActivation := AInputActivation;
+end;
+
 function TMultiLayerPerceptron.SetNeuronMaxValue(const ANeuron: INeuron; const AMaxValue: Double): IMultiLayerPerceptron;
 begin
   Result := Self;
@@ -777,13 +795,6 @@ end;
 function TMultiLayerPerceptron.SetInputValue(const ANeuronIndex: Integer; const AValue: Double): IMultiLayerPerceptron;
 begin
   Result := Self.SetInputValue(Self.GetInputLayer.Neurons.Get(ANeuronIndex), AValue);
-end;
-
-function TMultiLayerPerceptron.SetActivation(
-  const AActivation: IActivation): IMultiLayerPerceptron;
-begin
-  Result := Self;
-  FActivation := AActivation;
 end;
 
 function TMultiLayerPerceptron.SetGama(const AGama: Double): IMultiLayerPerceptron;

@@ -68,6 +68,8 @@ contains
   Marvin.Core.IA.Connectionist.Metric in '..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Metric.pas',
   Marvin.Core.IA.Connectionist.Perceptron.Clss in '..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Perceptron.Clss.pas',
   Marvin.Core.IA.Connectionist.Perceptron in '..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Perceptron.pas',
-  Marvin.Core.IA.Connectionist.Cost.MSE.Clss in '..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Cost.MSE.Clss.pas';
+  Marvin.Core.IA.Connectionist.Cost.MSE.Clss in '..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.Cost.MSE.Clss.pas',
+  Marvin.Core.IA.Connectionist.LayerInitInfo in '..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.LayerInitInfo.pas',
+  Marvin.Core.IA.Connectionist.LayerInitInfo.Clss in '..\..\Source\MachineLearning\Marvin.Core.IA.Connectionist.LayerInitInfo.Clss.pas';
 
 end.
