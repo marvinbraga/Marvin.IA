@@ -160,7 +160,6 @@ begin
   FMlp.SetLearnFile(FLearningFile);
   { recupera os dados }
   FInputData.Add(ATrainDataInputs);
-  FMlp.SetInputActivation(FInputActivation);
   FOutputData.Add(ATrainDataOutputs);
   { verifica a estrutura da rede, inputs e outputs }
   LNumberOfInputs := Length(FInputData.Get(0));
@@ -226,6 +225,7 @@ begin
   { configura a MLP }
   FMlp
     .Clear
+    .SetInputActivation(FInputActivation)
     .SetLayersInfo(FHiddenLayersInfo)
     .SetLearnFile(FLearningFile)
     .SetLearning(FLearning)
